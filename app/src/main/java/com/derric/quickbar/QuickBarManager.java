@@ -46,33 +46,22 @@ public class QuickBarManager {
         barView.setLayoutParams(params);
         //Add the barView image to the framelayout(Quickbar)
         quickBar.addView(barView);
-
-//        LayoutInflater inflater = LayoutInflater.from(mContext);
-//        ImageView icon = (ImageView) inflater.inflate(R.layout.icon_layout, null, false);
-//        quickBar.addView(icon);
-//        ImageView icon2 = (ImageView) inflater.inflate(R.layout.icon2_layout, null, false);
-//        quickBar.addView(icon2);
         PackageManager packageManager = mContext.getPackageManager();
         List<AppInfo> appInfos = getAllInstalledApps(packageManager);
         for(AppInfo appInfo: appInfos){
-            ImageView iconView = new ImageView(mContext);
-            iconView.setImageDrawable(appInfo.getIcon());
-            iconView.setOnClickListener((v) -> {
-                Intent launchIntent = new Intent(packageManager.getLaunchIntentForPackage(appInfo.getPackageName()));
-                if(launchIntent != null){
-                    mContext.startActivity(launchIntent);
-                }
-            });
-            quickBar.addView(iconView);
+            Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(appInfo.getPackageName());
+            //Exclude apps which don't have main activity (Avoid system services apps which don't have an UI)
+            if(mainActivityIntent != null){
+                ImageView iconView = new ImageView(mContext);
+                iconView.setImageDrawable(appInfo.getIcon());
+                iconView.setOnClickListener((v) -> mContext.startActivity(mainActivityIntent));
+                quickBar.addView(iconView);
+            }
+
         }
-
-//        ImageView iconView = activity.findViewById(R.id.chromeicon);
-//        iconView.setImageDrawable(icon);
-
-
         //Add the quickBar to a list, so that we can access the quickbar to delete it later when service stops.
         mQuickBars.add(quickBar);
-        //Now add the framelayout to the screen/display by telling the manager to do it.
+        //Now Get the layout settings defined in Quickbar class and add the framelayout to the screen/display by telling the manager to do it.
         mWindowManager.addView(quickBar, quickBar.getWindowLayoutParams());
     }
 
@@ -89,7 +78,7 @@ public class QuickBarManager {
 //        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 //        List<ResolveInfo> appList = packageManager.queryIntentActivities(mainIntent, 0);
 //        int id = -1;
-        Drawable icon=null;
+//        Drawable icon=null;
 //        String packageName = null;
 //        for(ResolveInfo resolveInfo: appList){
 ////
@@ -103,18 +92,14 @@ public class QuickBarManager {
 //        }
 ////        Log.d("icon",packageName);
 ////        Log.d("id", String.valueOf(id));
-
+//Todo : Below code will only  work in phones below Aroid Oreo, need to use above code for above oreo phones
         List<AppInfo> appInfos = new ArrayList<>();
         List<PackageInfo> packs = packageManager.getInstalledPackages(0);
-        for(int i=0;i<5;i++){
+        for(int i=0;i<50;i++){
             PackageInfo packageInfo = packs.get(i);
             AppInfo appInfo = new AppInfo();
             appInfo.setIcon(packageInfo.applicationInfo.loadIcon(packageManager));
             appInfo.setPackageName(packageInfo.packageName);
-//            Log.d("packageName:",packageInfo.packageName);
-//            if(packageInfo.packageName.contains("chrom")){
-//                icon = packageInfo.applicationInfo.loadIcon(packageManager);
-//            }
             appInfos.add(appInfo);
         }
         return appInfos;

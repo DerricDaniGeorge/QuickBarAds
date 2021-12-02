@@ -59,7 +59,7 @@ public class QuickBarService extends Service {
         // like Wifi service,notification service..etc
         WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(metrics);
-        LayoutInflater inflater = LayoutInflater.from(this);
+//        LayoutInflater inflater = LayoutInflater.from(this);
         //Show Quickbar on the screen
 //        ImageView barView = (ImageView) inflater.inflate(R.layout.quickbar_layout, null, false);
 ////        View barView = inflater.inflate(R.layout.quickbar_layout, null, false);
@@ -68,7 +68,7 @@ public class QuickBarService extends Service {
         mQuickBarManager = new QuickBarManager(this);
         LinearLayout linearLayout = new LinearLayout(this);
 //        linearLayout.setBackgroundResource(R.drawable.green_panel);
-        linearLayout.setBackgroundColor(Color.BLUE);
+//        linearLayout.setBackgroundColor(Color.BLUE);
 
         //Tell manager to add the bar view image to the display
 //        mQuickBarManager.addViewToWindow(barView);

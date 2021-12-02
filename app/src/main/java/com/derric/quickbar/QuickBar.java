@@ -58,9 +58,7 @@ public class QuickBar extends LinearLayout{
         windowLayoutParams.gravity = Gravity.TOP | Gravity.RIGHT;
         this.setBackgroundResource(R.drawable.green_panel);
         super.setOrientation(LinearLayout.VERTICAL);
-
         this.setOrientation(LinearLayout.VERTICAL);
     }
 
-    //Attach quickbar to the right side of the screen
 }
