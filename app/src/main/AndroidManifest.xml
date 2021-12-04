@@ -10,6 +10,7 @@
     To get all apps installed in the device..This needs to be removed later due to play store restrictions
    and need to use intent filter to deploy this app in play store
    -->
+    <!--Android 11 and above requires this permission to get all apps -->
      <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
      tools:ignore="QueryAllPackagesPermission" />
 

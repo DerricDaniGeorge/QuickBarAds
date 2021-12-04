@@ -1,19 +1,14 @@
 package com.derric.quickbar;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -35,12 +30,22 @@ public class QuickBarManager {
     //Stores each Quickbars added to the screen
     private final List<ScrollView> mQuickBars;
 
+    private final List<View> mQuickBars2;
+
     public QuickBarManager(Context context) {
         this.mContext = context;
         this.mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         this.mQuickBars = new ArrayList<>();
+        this.mQuickBars2=new ArrayList<>();
     }
 
+    public void addToWindow2(View linearLayout){
+        QuickBar2 quickBar2 = new QuickBar2(mContext);
+        mQuickBars2.add(linearLayout);
+        LinearLayout layout2 = linearLayout.findViewById(R.id.innerlinear);
+        getAllApps2(layout2);
+        mWindowManager.addView(linearLayout,quickBar2.windowLayoutParams);
+    }
     public void addViewToWindow(View barView, ScrollView scrollView) {
         //Here now a FrameLayout is created as the QuickBar class extends FrameLayout
         final QuickBar quickBar = new QuickBar(mContext);
@@ -50,6 +55,14 @@ public class QuickBarManager {
         //Add the barView image to the framelayout(Quickbar)
         quickBar.addView(barView);
         scrollView.addView(quickBar);
+        setAppIcons(quickBar);
+        //Add the quickBar to a list, so that we can access the quickbar to delete it later when service stops.
+        mQuickBars.add(scrollView);
+        //Now Get the layout settings defined in Quickbar class and add the framelayout to the screen/display by telling the manager to do it.
+        mWindowManager.addView(scrollView, quickBar.getWindowLayoutParams());
+    }
+
+    private void setAppIcons(QuickBar quickBar) {
         PackageManager packageManager = mContext.getPackageManager();
         List<AppInfo> appInfos = getAllInstalledApps(packageManager);
         for (AppInfo appInfo : appInfos) {
@@ -63,10 +76,25 @@ public class QuickBarManager {
             }
 
         }
-        //Add the quickBar to a list, so that we can access the quickbar to delete it later when service stops.
-        mQuickBars.add(scrollView);
-        //Now Get the layout settings defined in Quickbar class and add the framelayout to the screen/display by telling the manager to do it.
-        mWindowManager.addView(scrollView, quickBar.getWindowLayoutParams());
+    }
+
+    private void getAllApps2(LinearLayout innerLayout ) {
+        LinearLayout.LayoutParams iconSize = new LinearLayout.LayoutParams(110,110);
+        PackageManager packageManager = mContext.getPackageManager();
+        List<AppInfo> appInfos = getAllInstalledApps(packageManager);
+        for (AppInfo appInfo : appInfos) {
+            Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(appInfo.getPackageName());
+            //Exclude apps which don't have main activity (Avoid system services apps which don't have an UI)
+            if (mainActivityIntent != null) {
+                ImageView iconView = new ImageView(mContext);
+                iconView.setImageDrawable(appInfo.getIcon());
+                //Set icon's height and width
+                iconView.setLayoutParams(iconSize);
+                iconView.setOnClickListener((v) -> mContext.startActivity(mainActivityIntent));
+                innerLayout.addView(iconView);
+            }
+
+        }
     }
 
     public void removeAllQuickBarsFromWindow() {
@@ -75,6 +103,14 @@ public class QuickBarManager {
         }
         mQuickBars.clear();
     }
+
+    public void removeAllQuickBarsFromWindow2() {
+        for (View quickBar : mQuickBars2) {
+            mWindowManager.removeViewImmediate(quickBar);
+        }
+        mQuickBars2.clear();
+    }
+
 
     public List<AppInfo> getAllInstalledApps(PackageManager packageManager) {
         List<AppInfo> appInfos = new ArrayList<>();
