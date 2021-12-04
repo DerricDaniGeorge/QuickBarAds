@@ -3,10 +3,12 @@ package com.derric.quickbar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.derric.quickbar.models.AppInfo;
 
@@ -30,7 +33,7 @@ public class QuickBarManager {
     private final Context mContext;
     private final WindowManager mWindowManager;
     //Stores each Quickbars added to the screen
-    private final List<QuickBar> mQuickBars;
+    private final List<ScrollView> mQuickBars;
 
     public QuickBarManager(Context context) {
         this.mContext = context;
@@ -38,7 +41,7 @@ public class QuickBarManager {
         this.mQuickBars = new ArrayList<>();
     }
 
-    public void addViewToWindow(View barView) {
+    public void addViewToWindow(View barView, ScrollView scrollView) {
         //Here now a FrameLayout is created as the QuickBar class extends FrameLayout
         final QuickBar quickBar = new QuickBar(mContext);
         //Set barView image size. Set it to the size of framelayout it self, so the bar panel covers the entire framelayout area.
@@ -46,12 +49,13 @@ public class QuickBarManager {
         barView.setLayoutParams(params);
         //Add the barView image to the framelayout(Quickbar)
         quickBar.addView(barView);
+        scrollView.addView(quickBar);
         PackageManager packageManager = mContext.getPackageManager();
         List<AppInfo> appInfos = getAllInstalledApps(packageManager);
-        for(AppInfo appInfo: appInfos){
+        for (AppInfo appInfo : appInfos) {
             Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(appInfo.getPackageName());
             //Exclude apps which don't have main activity (Avoid system services apps which don't have an UI)
-            if(mainActivityIntent != null){
+            if (mainActivityIntent != null) {
                 ImageView iconView = new ImageView(mContext);
                 iconView.setImageDrawable(appInfo.getIcon());
                 iconView.setOnClickListener((v) -> mContext.startActivity(mainActivityIntent));
@@ -60,48 +64,48 @@ public class QuickBarManager {
 
         }
         //Add the quickBar to a list, so that we can access the quickbar to delete it later when service stops.
-        mQuickBars.add(quickBar);
+        mQuickBars.add(scrollView);
         //Now Get the layout settings defined in Quickbar class and add the framelayout to the screen/display by telling the manager to do it.
-        mWindowManager.addView(quickBar, quickBar.getWindowLayoutParams());
+        mWindowManager.addView(scrollView, quickBar.getWindowLayoutParams());
     }
 
     public void removeAllQuickBarsFromWindow() {
-        for (QuickBar quickBar : mQuickBars) {
+        for (ScrollView quickBar : mQuickBars) {
             mWindowManager.removeViewImmediate(quickBar);
         }
         mQuickBars.clear();
     }
 
     public List<AppInfo> getAllInstalledApps(PackageManager packageManager) {
-//        //Get list of installed apps.
-//        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-//        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-//        List<ResolveInfo> appList = packageManager.queryIntentActivities(mainIntent, 0);
-//        int id = -1;
-//        Drawable icon=null;
-//        String packageName = null;
-//        for(ResolveInfo resolveInfo: appList){
-////
-//           if(resolveInfo.activityInfo.packageName.contains("gall")){
-//               id = resolveInfo.activityInfo.icon;
-//               packageName = resolveInfo.activityInfo.packageName;
-//              icon= resolveInfo.activityInfo.loadIcon(packageManager);
-//           }
-//        Log.i("packageName",resolveInfo.activityInfo.packageName);
-//        Log.i("icon",resolveInfo.activityInfo.loadIcon(packageManager).toString());
-//        }
-////        Log.d("icon",packageName);
-////        Log.d("id", String.valueOf(id));
-//Todo : Below code will only  work in phones below Aroid Oreo, need to use above code for above oreo phones
         List<AppInfo> appInfos = new ArrayList<>();
-        List<PackageInfo> packs = packageManager.getInstalledPackages(0);
-        for(int i=0;i<50;i++){
-            PackageInfo packageInfo = packs.get(i);
-            AppInfo appInfo = new AppInfo();
-            appInfo.setIcon(packageInfo.applicationInfo.loadIcon(packageManager));
-            appInfo.setPackageName(packageInfo.packageName);
-            appInfos.add(appInfo);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            List<ApplicationInfo> appList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+            //Get list of installed apps.
+//            Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+//            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+//            List<ResolveInfo> appList = packageManager.queryIntentActivities(mainIntent, 0);
+//            for (ResolveInfo resolveInfo : appList) {
+//                AppInfo appInfo = new AppInfo();
+//                appInfo.setIcon(resolveInfo.activityInfo.loadIcon(packageManager));
+//                appInfo.setPackageName(resolveInfo.activityInfo.packageName);
+//                appInfos.add(appInfo);
+//            }
+            for (ApplicationInfo resolveInfo : appList) {
+                AppInfo appInfo = new AppInfo();
+                appInfo.setIcon(resolveInfo.loadIcon(packageManager));
+                appInfo.setPackageName(resolveInfo.packageName);
+                appInfos.add(appInfo);
+            }
+        } else {
+            List<PackageInfo> packs = packageManager.getInstalledPackages(0);
+            for (PackageInfo packageInfo: packs) {
+                AppInfo appInfo = new AppInfo();
+                appInfo.setIcon(packageInfo.applicationInfo.loadIcon(packageManager));
+                appInfo.setPackageName(packageInfo.packageName);
+                appInfos.add(appInfo);
+            }
         }
+
         return appInfos;
     }
 }

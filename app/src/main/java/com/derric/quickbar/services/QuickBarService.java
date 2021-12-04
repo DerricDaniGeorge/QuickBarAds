@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -31,8 +32,7 @@ import com.derric.quickbar.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/*Todo: Need to start the service in separate thread. currently it is running in main thread. Check Service developer guide
-to implement that */
+
 public class QuickBarService extends Service {
 
     public static final int NOTIFICATION_ID = 988321;
@@ -59,11 +59,13 @@ public class QuickBarService extends Service {
         // like Wifi service,notification service..etc
         WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(metrics);
-//        LayoutInflater inflater = LayoutInflater.from(this);
+        LayoutInflater inflater = LayoutInflater.from(this);
         //Show Quickbar on the screen
 //        ImageView barView = (ImageView) inflater.inflate(R.layout.quickbar_layout, null, false);
 ////        View barView = inflater.inflate(R.layout.quickbar_layout, null, false);
 //        barView.setOnClickListener(view -> Log.d("QuickBarService", "Quick bar clicked!!!"));
+//        ScrollView scrollView = (ScrollView) inflater.inflate(R.layout.scrollablebar_layout,null,false);
+        ScrollView scrollView = new ScrollView(this);
 
         mQuickBarManager = new QuickBarManager(this);
         LinearLayout linearLayout = new LinearLayout(this);
@@ -72,7 +74,7 @@ public class QuickBarService extends Service {
 
         //Tell manager to add the bar view image to the display
 //        mQuickBarManager.addViewToWindow(barView);
-                mQuickBarManager.addViewToWindow(linearLayout);
+                mQuickBarManager.addViewToWindow(linearLayout,scrollView);
 
         //Android OS Oreo or above requires Notificaition channel needs to be created to start
         //foreground service

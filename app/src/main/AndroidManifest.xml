@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.derric.quickbar">
-
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <!-- Foreground Service permission(API level 28 or higher) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!--
+    To get all apps installed in the device..This needs to be removed later due to play store restrictions
+   and need to use intent filter to deploy this app in play store
+   -->
+     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+     tools:ignore="QueryAllPackagesPermission" />
 
     <application
         android:allowBackup="true"
@@ -17,7 +23,7 @@
         <service
             android:name=".services.QuickBarService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="false"></service>
 
         <activity
             android:name=".MainActivity"
