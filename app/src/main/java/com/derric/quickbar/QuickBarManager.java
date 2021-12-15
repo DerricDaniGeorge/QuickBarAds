@@ -6,7 +6,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +13,10 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import androidx.annotation.RequiresApi;
-
 import com.derric.quickbar.models.AppInfo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Tell the QuickBarManager class what to do
@@ -31,28 +27,31 @@ public class QuickBarManager {
 
     private final Context mContext;
     private final WindowManager mWindowManager;
-    //Stores each Quickbars added to the screen
-    private final List<View> mQuickBars;
+    //Stores each Views added to the screen
+    private final List<View> mViews;
 
     public QuickBarManager(Context context) {
         this.mContext = context;
         this.mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        this.mQuickBars = new ArrayList<>();
+        this.mViews = new ArrayList<>();
     }
 
     public void addToWindow(View linearLayout) {
         QuickBar quickBar = new QuickBar(mContext);
-        mQuickBars.add(linearLayout);
+        mViews.add(linearLayout);
         ImageView hideBarArrow = linearLayout.findViewById(R.id.hide_arrow);
         //Hide quickbar when back arrow is pressed
         hideBarArrow.setOnClickListener(v -> {
             linearLayout.setVisibility(View.GONE);
             LayoutInflater inflater = LayoutInflater.from(mContext);
             ImageView showIcon = (ImageView) inflater.inflate(R.layout.icon_layout, null, false);
+            //When show button is clicked, show the quickbar
             showIcon.setOnClickListener(vi -> {
                 showIcon.setVisibility(View.GONE);
                 linearLayout.setVisibility(View.VISIBLE);
             });
+            //Add the show arrow to the list, so that we can remove it from screen when the service is stopped
+            mViews.add(showIcon);
             WindowManager.LayoutParams params = new WindowManager.LayoutParams();
             params.gravity = Gravity.RIGHT | Gravity.CENTER_HORIZONTAL;
             params.width = 60;
@@ -86,16 +85,15 @@ public class QuickBarManager {
                 iconView.setOnClickListener((v) -> mContext.startActivity(mainActivityIntent));
                 innerLayout.addView(iconView);
             }
-
         }
     }
 
 
     public void removeAllQuickBarsFromWindow() {
-        for (View quickBar : mQuickBars) {
+        for (View quickBar : mViews) {
             mWindowManager.removeViewImmediate(quickBar);
         }
-        mQuickBars.clear();
+        mViews.clear();
     }
 
 
