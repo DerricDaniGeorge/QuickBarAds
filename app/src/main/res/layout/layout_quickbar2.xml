@@ -3,31 +3,49 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="#ff8c66"
+    android:background="#f2f2f2"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="5dp"
-        android:src="@drawable/arrow_icon_right"></ImageView>
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="10dp"/>
-
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/second_linear"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginBottom="5dp">
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/innerlinear"
-            android:layout_width="50dp"
+        <ImageView
+            android:id="@+id/hide_arrow"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="5dp"
+            android:scaleX="-1"
+            android:src="@drawable/left_arrow"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="7dp" />
+
+        <ScrollView
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_marginBottom="5dp">
+
+            <LinearLayout
+                android:id="@+id/third_linear"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
 
-        </LinearLayout>
-    </ScrollView>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/left_arrow"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:visibility="gone"
+        android:src="@drawable/left_arrow" />
+
 </LinearLayout>
 

@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <!-- Foreground Service permission(API level 28 or higher) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- Start app on boot -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!--
     To get all apps installed in the device..This needs to be removed later due to play store restrictions
    and need to use intent filter to deploy this app in play store
@@ -24,7 +26,8 @@
         <service
             android:name=".services.QuickBarService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:stopWithTask="false"
+            android:exported="true"></service>
 
         <activity
             android:name=".MainActivity"
@@ -35,6 +38,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver android:name=".AutoStart"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

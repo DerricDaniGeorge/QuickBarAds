@@ -6,17 +6,21 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
+
+import androidx.annotation.RequiresApi;
 
 import com.derric.quickbar.models.AppInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Tell the QuickBarManager class what to do
@@ -28,57 +32,61 @@ public class QuickBarManager {
     private final Context mContext;
     private final WindowManager mWindowManager;
     //Stores each Quickbars added to the screen
-    private final List<ScrollView> mQuickBars;
 
-    private final List<View> mQuickBars2;
+    private final List<View> mQuickBars;
 
     public QuickBarManager(Context context) {
         this.mContext = context;
         this.mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        this.mQuickBars = new ArrayList<>();
-        this.mQuickBars2=new ArrayList<>();
+        this.mQuickBars =new ArrayList<>();
     }
 
-    public void addToWindow2(View linearLayout){
-        QuickBar2 quickBar2 = new QuickBar2(mContext);
-        mQuickBars2.add(linearLayout);
-        LinearLayout layout2 = linearLayout.findViewById(R.id.innerlinear);
-        getAllApps2(layout2);
-        mWindowManager.addView(linearLayout,quickBar2.windowLayoutParams);
-    }
-    public void addViewToWindow(View barView, ScrollView scrollView) {
-        //Here now a FrameLayout is created as the QuickBar class extends FrameLayout
-        final QuickBar quickBar = new QuickBar(mContext);
-        //Set barView image size. Set it to the size of framelayout it self, so the bar panel covers the entire framelayout area.
-        final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.MATCH_PARENT);
-        barView.setLayoutParams(params);
-        //Add the barView image to the framelayout(Quickbar)
-        quickBar.addView(barView);
-        scrollView.addView(quickBar);
-        setAppIcons(quickBar);
-        //Add the quickBar to a list, so that we can access the quickbar to delete it later when service stops.
-        mQuickBars.add(scrollView);
-        //Now Get the layout settings defined in Quickbar class and add the framelayout to the screen/display by telling the manager to do it.
-        mWindowManager.addView(scrollView, quickBar.getWindowLayoutParams());
-    }
-
-    private void setAppIcons(QuickBar quickBar) {
-        PackageManager packageManager = mContext.getPackageManager();
-        List<AppInfo> appInfos = getAllInstalledApps(packageManager);
-        for (AppInfo appInfo : appInfos) {
-            Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(appInfo.getPackageName());
-            //Exclude apps which don't have main activity (Avoid system services apps which don't have an UI)
-            if (mainActivityIntent != null) {
-                ImageView iconView = new ImageView(mContext);
-                iconView.setImageDrawable(appInfo.getIcon());
-                iconView.setOnClickListener((v) -> mContext.startActivity(mainActivityIntent));
-                quickBar.addView(iconView);
-            }
-
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void addToWindow(View linearLayout){
+        ImageView showBarArrow = linearLayout.findViewById(R.id.left_arrow);
+        LinearLayout secondLinear = linearLayout.findViewById(R.id.second_linear);
+        QuickBar quickBar = new QuickBar(mContext);
+        mQuickBars.add(linearLayout);
+        ImageView hideBarArrow = linearLayout.findViewById(R.id.hide_arrow);
+        //Hide quickbar when back arrow is pressed
+        AtomicReference<ImageView> imageView = new AtomicReference<>();
+        hideBarArrow.setOnClickListener(v -> {
+//            secondLinear.setVisibility(View.GONE);
+//            showBarArrow.setVisibility(View.VISIBLE);
+            mWindowManager.removeViewImmediate(linearLayout);
+            LayoutInflater inflater = LayoutInflater.from(mContext);
+            imageView.set((ImageView) inflater.inflate(R.layout.icon_layout, null, false));
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+            params.gravity = Gravity.RIGHT|Gravity.CENTER_HORIZONTAL;
+            params.width = 60;
+            params.height = 60;
+            params.type = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 ?
+                    WindowManager.LayoutParams.TYPE_PRIORITY_PHONE : WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+            params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                    //Allow window to extend outside of the screen
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
+            mWindowManager.addView(imageView.get(),params);
+        });
+        if(imageView.get() != null){
+            imageView.get().setOnClickListener(v ->{
+                Log.d("I am clicked"," Iam clicked");
+//            showBarArrow.setVisibility(View.GONE);
+//            secondLinear.setVisibility(View.VISIBLE);
+                mWindowManager.removeViewImmediate(imageView.get());
+                LayoutInflater inflater = LayoutInflater.from(mContext);
+                LinearLayout lay =(LinearLayout) inflater.inflate(R.layout.layout_quickbar2, null, false);
+                mWindowManager.addView(lay, quickBar.windowLayoutParams);
+            });
         }
+
+        LinearLayout layout2 = linearLayout.findViewById(R.id.third_linear);
+        getAllApps(layout2);
+        mWindowManager.addView(linearLayout, quickBar.windowLayoutParams);
     }
 
-    private void getAllApps2(LinearLayout innerLayout ) {
+    private void getAllApps(LinearLayout innerLayout) {
         LinearLayout.LayoutParams iconSize = new LinearLayout.LayoutParams(110,110);
         PackageManager packageManager = mContext.getPackageManager();
         List<AppInfo> appInfos = getAllInstalledApps(packageManager);
@@ -97,18 +105,12 @@ public class QuickBarManager {
         }
     }
 
+
     public void removeAllQuickBarsFromWindow() {
-        for (ScrollView quickBar : mQuickBars) {
+        for (View quickBar : mQuickBars) {
             mWindowManager.removeViewImmediate(quickBar);
         }
         mQuickBars.clear();
-    }
-
-    public void removeAllQuickBarsFromWindow2() {
-        for (View quickBar : mQuickBars2) {
-            mWindowManager.removeViewImmediate(quickBar);
-        }
-        mQuickBars2.clear();
     }
 
 
@@ -116,16 +118,6 @@ public class QuickBarManager {
         List<AppInfo> appInfos = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             List<ApplicationInfo> appList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-            //Get list of installed apps.
-//            Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-//            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-//            List<ResolveInfo> appList = packageManager.queryIntentActivities(mainIntent, 0);
-//            for (ResolveInfo resolveInfo : appList) {
-//                AppInfo appInfo = new AppInfo();
-//                appInfo.setIcon(resolveInfo.activityInfo.loadIcon(packageManager));
-//                appInfo.setPackageName(resolveInfo.activityInfo.packageName);
-//                appInfos.add(appInfo);
-//            }
             for (ApplicationInfo resolveInfo : appList) {
                 AppInfo appInfo = new AppInfo();
                 appInfo.setIcon(resolveInfo.loadIcon(packageManager));

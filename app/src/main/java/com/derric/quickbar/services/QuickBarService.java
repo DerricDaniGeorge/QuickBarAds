@@ -1,6 +1,5 @@
 package com.derric.quickbar.services;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,25 +11,16 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.derric.quickbar.MainActivity;
-import com.derric.quickbar.QuickBar;
 import com.derric.quickbar.QuickBarManager;
 import com.derric.quickbar.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class QuickBarService extends Service {
@@ -60,30 +50,10 @@ public class QuickBarService extends Service {
         WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(metrics);
         LayoutInflater inflater = LayoutInflater.from(this);
-//        //Show Quickbar on the screen
-////        ImageView barView = (ImageView) inflater.inflate(R.layout.quickbar_layout, null, false);
-//////        View barView = inflater.inflate(R.layout.quickbar_layout, null, false);
-////        barView.setOnClickListener(view -> Log.d("QuickBarService", "Quick bar clicked!!!"));
-//        ScrollView scrollView = (ScrollView) inflater.inflate(R.layout.scrollablebar_layout,null,false);
-////        ScrollView scrollView = new ScrollView(this);
-//
-//        mQuickBarManager = new QuickBarManager(this);
-//        LinearLayout linearLayout = new LinearLayout(this);
-////        linearLayout.setBackgroundResource(R.drawable.green_panel);
-////        linearLayout.setBackgroundColor(Color.BLUE);
-//
-//        //Tell manager to add the bar view image to the display
-////        mQuickBarManager.addViewToWindow(barView);
-//                mQuickBarManager.addViewToWindow(linearLayout,scrollView);
-
-
-
-
         // New implementation starts --------------->
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.layout_quickbar2,null,false);
         mQuickBarManager = new QuickBarManager(this);
-        mQuickBarManager.addToWindow2(linearLayout);
-        // New implementation ends --------------->
+        mQuickBarManager.addToWindow(linearLayout);
         //Android OS Oreo or above requires Notificaition channel needs to be created to start
         //foreground service
 
@@ -140,7 +110,6 @@ public class QuickBarService extends Service {
         //When the service is destroyed, remove the Quickbar from the screen
         if (mQuickBarManager != null) {
             mQuickBarManager.removeAllQuickBarsFromWindow();
-            mQuickBarManager.removeAllQuickBarsFromWindow2();
             // Make the window manager null, so that when the user press the lauch quickbar button
             //foreground service will start again if it is destroyed
             mQuickBarManager = null;

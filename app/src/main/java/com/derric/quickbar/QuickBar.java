@@ -1,39 +1,25 @@
 package com.derric.quickbar;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 
-import lombok.Getter;
-import lombok.Setter;
-
-
-//Extend FrameLayout, so that Quickbar act as a FrameLayout view
-//Now the QuickBar itself is a frameLayout
-//This class act as the floating quickbar
-@Getter
-@Setter
-public class QuickBar extends LinearLayout{
-
+public class QuickBar {
     //default height
     public static final int DEFAULT_HEIGHT = ViewGroup.LayoutParams.WRAP_CONTENT;
     //default width
     public static final int DEFAULT_WIDTH = ViewGroup.LayoutParams.WRAP_CONTENT;
-    private WindowManager.LayoutParams windowLayoutParams;
+    public WindowManager.LayoutParams windowLayoutParams;
     private WindowManager quickBarWindowManager;
 
     //When the quickbar is created, perform all the below setups
     public QuickBar(@NonNull Context context) {
-        super(context);
         quickBarWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         //Set Window managers layout parameters on QuickBar creation.
         //Setting these are very important and core part of this application and without these settings
@@ -56,9 +42,6 @@ public class QuickBar extends LinearLayout{
         windowLayoutParams.format = PixelFormat.TRANSLUCENT;
         //Display the quickbar on top right of the screen
         windowLayoutParams.gravity = Gravity.TOP | Gravity.RIGHT;
-        this.setBackgroundResource(R.drawable.green_panel);
-        super.setOrientation(LinearLayout.VERTICAL);
-        this.setOrientation(LinearLayout.VERTICAL);
-    }
 
+    }
 }
