@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:background="#f2f2f2"
+    android:gravity="center"
     android:orientation="vertical">
 
     <LinearLayout
@@ -14,38 +14,31 @@
 
         <ImageView
             android:id="@+id/hide_arrow"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="5dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:scaleX="-1"
-            android:src="@drawable/left_arrow"/>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="7dp" />
+            android:src="@drawable/left_arrow" />
 
         <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="5dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/third_linear"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
-
-
-            </LinearLayout>
+                android:orientation="vertical" />
         </ScrollView>
+
+
     </LinearLayout>
 
     <ImageView
         android:id="@+id/left_arrow"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:visibility="gone"
-        android:src="@drawable/left_arrow" />
+        android:src="@drawable/left_arrow"
+        android:visibility="gone" />
 
 </LinearLayout>
 

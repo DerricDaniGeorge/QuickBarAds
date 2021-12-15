@@ -6,7 +6,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +13,10 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import androidx.annotation.RequiresApi;
-
 import com.derric.quickbar.models.AppInfo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Tell the QuickBarManager class what to do
@@ -31,33 +27,33 @@ public class QuickBarManager {
 
     private final Context mContext;
     private final WindowManager mWindowManager;
-    //Stores each Quickbars added to the screen
-
-    private final List<View> mQuickBars;
+    //Stores each Views added to the screen
+    private final List<View> mViews;
 
     public QuickBarManager(Context context) {
         this.mContext = context;
         this.mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        this.mQuickBars =new ArrayList<>();
+        this.mViews = new ArrayList<>();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void addToWindow(View linearLayout){
-        ImageView showBarArrow = linearLayout.findViewById(R.id.left_arrow);
-        LinearLayout secondLinear = linearLayout.findViewById(R.id.second_linear);
+    public void addToWindow(View linearLayout) {
         QuickBar quickBar = new QuickBar(mContext);
-        mQuickBars.add(linearLayout);
+        mViews.add(linearLayout);
         ImageView hideBarArrow = linearLayout.findViewById(R.id.hide_arrow);
         //Hide quickbar when back arrow is pressed
-        AtomicReference<ImageView> imageView = new AtomicReference<>();
         hideBarArrow.setOnClickListener(v -> {
-//            secondLinear.setVisibility(View.GONE);
-//            showBarArrow.setVisibility(View.VISIBLE);
-            mWindowManager.removeViewImmediate(linearLayout);
+            linearLayout.setVisibility(View.GONE);
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            imageView.set((ImageView) inflater.inflate(R.layout.icon_layout, null, false));
+            ImageView showIcon = (ImageView) inflater.inflate(R.layout.icon_layout, null, false);
+            //When show button is clicked, show the quickbar
+            showIcon.setOnClickListener(vi -> {
+                showIcon.setVisibility(View.GONE);
+                linearLayout.setVisibility(View.VISIBLE);
+            });
+            //Add the show arrow to the list, so that we can remove it from screen when the service is stopped
+            mViews.add(showIcon);
             WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-            params.gravity = Gravity.RIGHT|Gravity.CENTER_HORIZONTAL;
+            params.gravity = Gravity.RIGHT | Gravity.CENTER_HORIZONTAL;
             params.width = 60;
             params.height = 60;
             params.type = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 ?
@@ -67,27 +63,15 @@ public class QuickBarManager {
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
                     WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
                     WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
-            mWindowManager.addView(imageView.get(),params);
+            mWindowManager.addView(showIcon, params);
         });
-        if(imageView.get() != null){
-            imageView.get().setOnClickListener(v ->{
-                Log.d("I am clicked"," Iam clicked");
-//            showBarArrow.setVisibility(View.GONE);
-//            secondLinear.setVisibility(View.VISIBLE);
-                mWindowManager.removeViewImmediate(imageView.get());
-                LayoutInflater inflater = LayoutInflater.from(mContext);
-                LinearLayout lay =(LinearLayout) inflater.inflate(R.layout.layout_quickbar2, null, false);
-                mWindowManager.addView(lay, quickBar.windowLayoutParams);
-            });
-        }
-
         LinearLayout layout2 = linearLayout.findViewById(R.id.third_linear);
         getAllApps(layout2);
         mWindowManager.addView(linearLayout, quickBar.windowLayoutParams);
     }
 
     private void getAllApps(LinearLayout innerLayout) {
-        LinearLayout.LayoutParams iconSize = new LinearLayout.LayoutParams(110,110);
+        LinearLayout.LayoutParams iconSize = new LinearLayout.LayoutParams(110, 110);
         PackageManager packageManager = mContext.getPackageManager();
         List<AppInfo> appInfos = getAllInstalledApps(packageManager);
         for (AppInfo appInfo : appInfos) {
@@ -101,16 +85,15 @@ public class QuickBarManager {
                 iconView.setOnClickListener((v) -> mContext.startActivity(mainActivityIntent));
                 innerLayout.addView(iconView);
             }
-
         }
     }
 
 
     public void removeAllQuickBarsFromWindow() {
-        for (View quickBar : mQuickBars) {
+        for (View quickBar : mViews) {
             mWindowManager.removeViewImmediate(quickBar);
         }
-        mQuickBars.clear();
+        mViews.clear();
     }
 
 
@@ -126,14 +109,13 @@ public class QuickBarManager {
             }
         } else {
             List<PackageInfo> packs = packageManager.getInstalledPackages(0);
-            for (PackageInfo packageInfo: packs) {
+            for (PackageInfo packageInfo : packs) {
                 AppInfo appInfo = new AppInfo();
                 appInfo.setIcon(packageInfo.applicationInfo.loadIcon(packageManager));
                 appInfo.setPackageName(packageInfo.packageName);
                 appInfos.add(appInfo);
             }
         }
-
         return appInfos;
     }
 }

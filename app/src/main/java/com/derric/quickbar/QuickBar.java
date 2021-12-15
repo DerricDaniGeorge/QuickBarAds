@@ -18,7 +18,8 @@ public class QuickBar {
     public WindowManager.LayoutParams windowLayoutParams;
     private WindowManager quickBarWindowManager;
 
-    //When the quickbar is created, perform all the below setups
+    //When the quickbar is created, tell the window manager, where to place the quickbar on the screen
+    //Also set various functionalities such as floating on the screen, etc
     public QuickBar(@NonNull Context context) {
         quickBarWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         //Set Window managers layout parameters on QuickBar creation.

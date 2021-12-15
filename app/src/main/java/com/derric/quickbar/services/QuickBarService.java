@@ -50,9 +50,9 @@ public class QuickBarService extends Service {
         WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(metrics);
         LayoutInflater inflater = LayoutInflater.from(this);
-        // New implementation starts --------------->
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.layout_quickbar2,null,false);
         mQuickBarManager = new QuickBarManager(this);
+        //Add the quickbar to screen
         mQuickBarManager.addToWindow(linearLayout);
         //Android OS Oreo or above requires Notificaition channel needs to be created to start
         //foreground service
