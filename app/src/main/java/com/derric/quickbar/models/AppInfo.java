@@ -10,4 +10,5 @@ import lombok.Setter;
 public class AppInfo {
     private Drawable icon;
     private String packageName;
+    private String appName;
 }

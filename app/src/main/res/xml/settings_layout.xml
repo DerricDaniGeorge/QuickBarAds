@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <SwitchPreferenceCompat
+        app:key="transparentBar"
+        app:title="Make the QuickBar transparent"
+        app:singleLineTitle="false"/>
+    <SwitchPreferenceCompat
+        app:key="sortApps"
+        app:title="Show apps in ascending order"
+        app:singleLineTitle="false"/>
+    <SwitchPreferenceCompat
+        app:key="autostart"
+        app:title="Start QuickBar on device boot"
+        app:singleLineTitle="false"/>
+    <SwitchPreferenceCompat
+        app:key="closeQuickBar"
+        app:title="Hide QuickBar"
+        app:summary="Hide QuickBar when an app is launched from QuickBar"
+        app:singleLineTitle="false"/>
+    <SwitchPreferenceCompat
+        app:key="allApps"
+        app:title="Show all apps"
+        app:summary="Show all apps in the device"
+        app:singleLineTitle="false"/>
+    <SwitchPreferenceCompat
+        app:key="hideLogo"
+        app:title="Hide QuickBar logo"
+        app:singleLineTitle="false"/>
+
+</androidx.preference.PreferenceScreen>
