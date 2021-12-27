@@ -17,7 +17,7 @@ public class AutoStart extends BroadcastReceiver {
             Class<? extends Service> service = QuickBarService.class;
             Intent startIntent = new Intent(context, service);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                ContextCompat.startForegroundService(context,startIntent);
+                ContextCompat.startForegroundService(context, startIntent);
             } else {
                 context.startService(startIntent);
             }

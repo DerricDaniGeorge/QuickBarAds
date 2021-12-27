@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.Settings;
 import android.view.LayoutInflater;
@@ -82,6 +83,12 @@ public class MainMenu extends Fragment {
         menuView.findViewById(R.id.launch_quickbar_button).setOnClickListener((v -> {
             showQuickBar(getActivity(), true);
         }));
+        menuView.findViewById(R.id.settings_button).setOnClickListener(v ->{
+            final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.container, new SettingsMenu());
+            ft.addToBackStack(null);
+            ft.commit();
+        });
         //Stop QuickBar service
         menuView.findViewById(R.id.stop_service_button).setOnClickListener(v -> {
             Intent stopIntent = new Intent(getActivity(), QuickBarService.class);
