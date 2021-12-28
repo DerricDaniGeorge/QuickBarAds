@@ -51,19 +51,24 @@ public class QuickBarManager {
         public boolean hideQuickBarOnAppLaunch;
         public boolean hideQuickBarLogo;
         public boolean showAllApps;
+        public String quickbarChooseSide;
     }
 
     public void addToWindow(View relativeLayout, QuickBarManager.Settings settings) {
-        QuickBar quickBar = new QuickBar(mContext);
+        QuickBar quickBar = new QuickBar(mContext, settings);
 
         mViews.add(relativeLayout);
         //New implementation starts -->
         ImageView hideArrow = relativeLayout.findViewById(R.id.hide_arrow);
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        showIcon = (ImageView) inflater.inflate(R.layout.icon_layout, null, false);
+        if(settings.quickbarChooseSide.equals("Right")){
+            showIcon = (ImageView) inflater.inflate(R.layout.icon_layout_left, null, false);
+        }else{
+            showIcon = (ImageView) inflater.inflate(R.layout.icon_layout_right, null, false);
+        }
         //Hide the show icon first and then only add to screen
         showIcon.setVisibility(View.GONE);
-        WindowManager.LayoutParams params = getLayoutParams();
+        WindowManager.LayoutParams params = getLayoutParams(settings);
         //When show button is clicked, show the quickbar
         showIcon.setOnClickListener(vi -> {
             showIcon.setVisibility(View.GONE);
@@ -77,7 +82,6 @@ public class QuickBarManager {
         });
         // Add the show arrow to the list, so that we can remove it from screen when the service is stopped
         mViews.add(showIcon);
-
         LinearLayout thirdLinear = relativeLayout.findViewById(R.id.third_linear);
         if (settings.useTransparentBackground) {
             relativeLayout.findViewById(R.id.second_linear).setBackgroundColor(Color.TRANSPARENT);
@@ -87,9 +91,13 @@ public class QuickBarManager {
     }
 
     @NonNull
-    private WindowManager.LayoutParams getLayoutParams() {
+    private WindowManager.LayoutParams getLayoutParams(QuickBarManager.Settings settings) {
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-        params.gravity = Gravity.RIGHT | Gravity.CENTER;
+        if (settings.quickbarChooseSide.equals("Right")) {
+            params.gravity = Gravity.RIGHT | Gravity.CENTER;
+        } else {
+            params.gravity = Gravity.LEFT | Gravity.CENTER;
+        }
         params.width = 60;
         params.height = 60;
         params.type = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 ?
@@ -183,7 +191,6 @@ public class QuickBarManager {
     }
 
     public void sortAppsByName(List<AppInfo> appInfos) {
-
         class AppNameAscendingComparator implements Comparator<AppInfo> {
             @Override
             public int compare(AppInfo o1, AppInfo o2) {

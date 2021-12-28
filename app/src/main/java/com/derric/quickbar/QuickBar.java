@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 
@@ -20,15 +21,15 @@ public class QuickBar {
 
     //When the quickbar is created, tell the window manager, where to place the quickbar on the screen
     //Also set various functionalities such as floating on the screen, etc
-    public QuickBar(@NonNull Context context) {
+    public QuickBar(@NonNull Context context, QuickBarManager.Settings settings) {
         quickBarWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         //Set Window managers layout parameters on QuickBar creation.
         //Setting these are very important and core part of this application and without these settings
         //application won't work at all.
         windowLayoutParams = new WindowManager.LayoutParams();
-//        windowLayoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-        windowLayoutParams.width = 300;
-        windowLayoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        windowLayoutParams.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+//        windowLayoutParams.width = 300;
+        windowLayoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
         //TYPE_APPLICATION_OVERLAY -->Allows floating quickbar to get displayed over all other activities
         //except status bar on top or other critical views..
         windowLayoutParams.type = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 ?
@@ -42,8 +43,11 @@ public class QuickBar {
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
         //Semi transparent
         windowLayoutParams.format = PixelFormat.TRANSLUCENT;
-        //Display the quickbar on top right of the screen
-        windowLayoutParams.gravity = Gravity.TOP | Gravity.RIGHT;
-
+        if (settings.quickbarChooseSide.equals("Right")) {
+            //Display the quickbar on top right of the screen
+            windowLayoutParams.gravity = Gravity.CENTER | Gravity.RIGHT;
+        } else {
+            windowLayoutParams.gravity = Gravity.CENTER | Gravity.LEFT;
+        }
     }
 }

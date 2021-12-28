@@ -2,29 +2,34 @@
 <androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
     <SwitchPreferenceCompat
         app:key="transparentBar"
-        app:title="Make the QuickBar transparent"
-        app:singleLineTitle="false"/>
+        app:singleLineTitle="false"
+        app:title="Transparent background" />
     <SwitchPreferenceCompat
         app:key="sortApps"
-        app:title="Show apps in ascending order"
-        app:singleLineTitle="false"/>
+        app:singleLineTitle="false"
+        app:title="Show apps in ascending order" />
     <SwitchPreferenceCompat
         app:key="autostart"
-        app:title="Start QuickBar on device boot"
-        app:singleLineTitle="false"/>
+        app:singleLineTitle="false"
+        app:title="Start QuickBar on device boot" />
     <SwitchPreferenceCompat
         app:key="closeQuickBar"
-        app:title="Hide QuickBar"
+        app:singleLineTitle="false"
         app:summary="Hide QuickBar when an app is launched from QuickBar"
-        app:singleLineTitle="false"/>
+        app:title="Hide QuickBar" />
     <SwitchPreferenceCompat
         app:key="allApps"
-        app:title="Show all apps"
+        app:singleLineTitle="false"
         app:summary="Show all apps in the device"
-        app:singleLineTitle="false"/>
+        app:title="Show all apps" />
     <SwitchPreferenceCompat
         app:key="hideLogo"
-        app:title="Hide QuickBar logo"
-        app:singleLineTitle="false"/>
-
+        app:singleLineTitle="false"
+        app:title="Hide QuickBar logo" />
+    <ListPreference
+        app:defaultValue="Right"
+        app:entries="@array/settings_values_quickbar_align"
+        app:entryValues="@array/settings_values_quickbar_align"
+        app:key="chooseSide"
+        app:title="@string/settings_side" />
 </androidx.preference.PreferenceScreen>

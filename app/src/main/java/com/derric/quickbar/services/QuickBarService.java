@@ -14,7 +14,6 @@ import android.os.IBinder;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.RequiresApi;
@@ -25,15 +24,12 @@ import com.derric.quickbar.MainActivity;
 import com.derric.quickbar.QuickBarManager;
 import com.derric.quickbar.R;
 
-import java.util.Map;
-
 
 public class QuickBarService extends Service {
 
     public static final int NOTIFICATION_ID = 988321;
     private QuickBarManager mQuickBarManager;
     public static final String NOTIFICATION_CHANNEL_ID = "com.derric.quickbar";
-    public static final String SETTINGS_FILE_NAME = "quickbar_settings";
 
 
     public QuickBarService() {
@@ -56,12 +52,18 @@ public class QuickBarService extends Service {
         WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(metrics);
         //Load user settings
+        QuickBarManager.Settings userSettings = loadUserSettings(this);
         LayoutInflater inflater = LayoutInflater.from(this);
-        RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.layout_quickbar2,null,false);
+        RelativeLayout relativeLayout;
+        if(userSettings.quickbarChooseSide.equals("Right")){
+            relativeLayout = (RelativeLayout) inflater.inflate(R.layout.layout_quickbar_right,null,false);
+        }else{
+            relativeLayout = (RelativeLayout) inflater.inflate(R.layout.layout_quickbar_left,null,false);
+        }
 
         mQuickBarManager = new QuickBarManager(this);
         //Add the quickbar to screen
-        mQuickBarManager.addToWindow(relativeLayout,loadUserSettings(this));
+        mQuickBarManager.addToWindow(relativeLayout, userSettings);
         //Android OS Oreo or above requires Notificaition channel needs to be created to start
         //foreground service
 
@@ -126,6 +128,7 @@ public class QuickBarService extends Service {
 
     public QuickBarManager.Settings loadUserSettings(Context context){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        System.out.println("settings are -->"+preferences.getAll());
         final QuickBarManager.Settings settings = new QuickBarManager.Settings();
         settings.useTransparentBackground = preferences.getBoolean("transparentBar",false);
         settings.showAppsInAscendingOrder=preferences.getBoolean("sortApps",false);
@@ -133,6 +136,7 @@ public class QuickBarService extends Service {
         settings.hideQuickBarOnAppLaunch = preferences.getBoolean("closeQuickBar",false);
         settings.showAllApps = preferences.getBoolean("allApps",false);
         settings.hideQuickBarLogo = preferences.getBoolean("hideLogo",false);
+        settings.quickbarChooseSide = preferences.getString("chooseSide","Right");
         return settings;
     }
 }
