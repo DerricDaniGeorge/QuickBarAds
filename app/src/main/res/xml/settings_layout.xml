@@ -35,6 +35,5 @@
     <Preference
         android:key="chooseApps"
         android:title="Select Apps">
-        <intent android:action="your.action.string" />
     </Preference>
 </androidx.preference.PreferenceScreen>

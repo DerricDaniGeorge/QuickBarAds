@@ -23,6 +23,9 @@ import androidx.preference.PreferenceManager;
 import com.derric.quickbar.MainActivity;
 import com.derric.quickbar.QuickBarManager;
 import com.derric.quickbar.R;
+import com.derric.quickbar.models.AppInfo;
+
+import java.util.ArrayList;
 
 
 public class QuickBarService extends Service {
@@ -62,8 +65,10 @@ public class QuickBarService extends Service {
         }
 
         mQuickBarManager = new QuickBarManager(this);
+        ArrayList<AppInfo> appInfos = (ArrayList<AppInfo>) intent.getSerializableExtra("appInfos");
+        System.out.println("Appinfo size in service:"+appInfos.size());
         //Add the quickbar to screen
-        mQuickBarManager.addToWindow(relativeLayout, userSettings);
+        mQuickBarManager.addToWindow(relativeLayout, userSettings, appInfos);
         //Android OS Oreo or above requires Notificaition channel needs to be created to start
         //foreground service
 

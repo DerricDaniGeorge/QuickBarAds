@@ -6,7 +6,11 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,6 +23,11 @@ import androidx.annotation.NonNull;
 
 import com.derric.quickbar.models.AppInfo;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -54,7 +63,7 @@ public class QuickBarManager {
         public String quickbarChooseSide;
     }
 
-    public void addToWindow(View relativeLayout, QuickBarManager.Settings settings) {
+    public void addToWindow(View relativeLayout, QuickBarManager.Settings settings, ArrayList<AppInfo> appInfos) {
         QuickBar quickBar = new QuickBar(mContext, settings);
 
         mViews.add(relativeLayout);
@@ -86,7 +95,8 @@ public class QuickBarManager {
         if (settings.useTransparentBackground) {
             relativeLayout.findViewById(R.id.second_linear).setBackgroundColor(Color.TRANSPARENT);
         }
-        getAllApps(thirdLinear, settings, relativeLayout);
+        System.out.println("Appinfos size:"+appInfos.size());
+        getAllApps2(thirdLinear, settings, relativeLayout,appInfos);
         mWindowManager.addView(relativeLayout, quickBar.windowLayoutParams);
     }
 
@@ -110,19 +120,52 @@ public class QuickBarManager {
         return params;
     }
 
-    private void getAllApps(LinearLayout innerLayout, QuickBarManager.Settings settings, View relativeLayout) {
+//    private void getAllApps(LinearLayout innerLayout, QuickBarManager.Settings settings, View relativeLayout) {
+//        LinearLayout.LayoutParams iconSize = new LinearLayout.LayoutParams(110, 110);
+//        PackageManager packageManager = mContext.getPackageManager();
+//        List<AppInfo> appInfos = getAllInstalledApps(packageManager);
+//        if (settings.showAppsInAscendingOrder) {
+//            sortAppsByName(appInfos);
+//        }
+//        for (AppInfo appInfo : appInfos) {
+//            Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(appInfo.getPackageName());
+//            //Exclude apps which don't have main activity (Avoid system services apps which don't have an UI)
+//            if (mainActivityIntent != null) {
+//                ImageView iconView = new ImageView(mContext);
+//                iconView.setImageDrawable(appInfo.getIcon());
+//                //Set icon's height and width
+//                iconView.setLayoutParams(iconSize);
+//                iconView.setOnClickListener((v) -> {
+//                    mContext.startActivity(mainActivityIntent);
+//                    if (settings.hideQuickBarOnAppLaunch) {
+//                        relativeLayout.setVisibility(View.GONE);
+//                        showIcon.setVisibility(View.VISIBLE);
+//                    }
+//                });
+//                innerLayout.addView(iconView);
+//            }
+//        }
+//    }
+
+    private void getAllApps2(LinearLayout innerLayout, QuickBarManager.Settings settings, View relativeLayout,ArrayList<AppInfo> appInfos) {
         LinearLayout.LayoutParams iconSize = new LinearLayout.LayoutParams(110, 110);
         PackageManager packageManager = mContext.getPackageManager();
-        List<AppInfo> appInfos = getAllInstalledApps(packageManager);
+//        List<AppInfo> appInfos = getAllInstalledApps(packageManager);
         if (settings.showAppsInAscendingOrder) {
             sortAppsByName(appInfos);
         }
         for (AppInfo appInfo : appInfos) {
+            System.out.println("appIcon: "+appInfo.getIcon());
             Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(appInfo.getPackageName());
             //Exclude apps which don't have main activity (Avoid system services apps which don't have an UI)
             if (mainActivityIntent != null) {
                 ImageView iconView = new ImageView(mContext);
-                iconView.setImageDrawable(appInfo.getIcon());
+//                byte[] imageBytes = appInfo.getIcon();
+//                Bitmap bmp = BitmapFactory.decodeByteArray(imageBytes,0,imageBytes.length);
+//                iconView.setImageBitmap(bmp);
+                File filePath = mContext.getFileStreamPath(appInfo.getIconPath());
+                Drawable icon = Drawable.createFromPath(filePath.toString());
+                iconView.setImageDrawable(icon);
                 //Set icon's height and width
                 iconView.setLayoutParams(iconSize);
                 iconView.setOnClickListener((v) -> {
@@ -138,6 +181,7 @@ public class QuickBarManager {
     }
 
 
+
     public void removeAllQuickBarsFromWindow() {
         for (View quickBar : mViews) {
             mWindowManager.removeViewImmediate(quickBar);
@@ -146,44 +190,99 @@ public class QuickBarManager {
     }
 
 
-    public List<AppInfo> getAllInstalledApps(PackageManager packageManager) {
+    public static List<AppInfo> getAllInstalledApps(PackageManager packageManager, Context context) {
         List<AppInfo> appInfos = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             List<ApplicationInfo> appList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-            for (ApplicationInfo resolveInfo : appList) {
+            for (ApplicationInfo applicationInfo : appList) {
                 AppInfo appInfo = new AppInfo();
-                appInfo.setIcon(resolveInfo.loadIcon(packageManager));
-                appInfo.setPackageName(resolveInfo.packageName);
+                Drawable drawable = applicationInfo.loadIcon(packageManager);
+                //Convert image to bytes
+                byte[] bitmapData = getDrawableBytes((BitmapDrawable) drawable);
+                String packageName = applicationInfo.packageName;
+                appInfo.setPackageName(packageName);
+                if(packageName.contains(".")){
+                   appInfo.setIconPath(packageName.replaceAll(".","")+".png");
+                }else{
+                    appInfo.setIconPath(packageName+".png");
+                }
+                saveAppIcon(context, appInfo, bitmapData);
+                appInfo.setAppName(packageManager.getApplicationLabel(applicationInfo).toString());
                 appInfos.add(appInfo);
-                appInfo.setAppName(packageManager.getApplicationLabel(resolveInfo).toString());
 //                Log.d("appNames", appInfo.getAppName());
             }
-            appInfos.addAll(getDialerApps(packageManager));
+            appInfos.addAll(getDialerApps(packageManager, context));
 
         } else {
             List<PackageInfo> packs = packageManager.getInstalledPackages(0);
             for (PackageInfo packageInfo : packs) {
                 AppInfo appInfo = new AppInfo();
-                appInfo.setIcon(packageInfo.applicationInfo.loadIcon(packageManager));
-                appInfo.setPackageName(packageInfo.packageName);
-                appInfo.setAppName(packageManager.getApplicationLabel(packageInfo.applicationInfo).toString());
+                Drawable drawable = packageInfo.applicationInfo.loadIcon(packageManager);
+                byte[] bitmapData = getDrawableBytes((BitmapDrawable) drawable);
+                String packageName = packageInfo.packageName;
+                appInfo.setPackageName(packageName);
+                if(packageName.contains(".")){
+                    appInfo.setIconPath(packageName.replaceAll(".","")+".png");
+                }else{
+                    appInfo.setIconPath(packageName+".png");
+                }
+                saveAppIcon(context, appInfo, bitmapData);
                 appInfos.add(appInfo);
+                appInfo.setAppName(packageManager.getApplicationLabel(packageInfo.applicationInfo).toString());
 //                Log.d("appNames", appInfo.getAppName());
             }
-            appInfos.addAll(getDialerApps(packageManager));
+            appInfos.addAll(getDialerApps(packageManager,context));
         }
         return appInfos;
     }
 
-    public List<AppInfo> getDialerApps(PackageManager packageManager) {
+    private static void saveAppIcon(Context context, AppInfo appInfo, byte[] bitmapData) {
+        if(bitmapData != null){
+            try{
+                FileOutputStream fileOutputStream = context.openFileOutput(appInfo.getIconPath(), Context.MODE_PRIVATE);
+                fileOutputStream.write(bitmapData);
+                fileOutputStream.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    /**
+     * Convert Drawable icon to bytes array
+     * @param drawable
+     * @return
+     */
+    private static byte[] getDrawableBytes(BitmapDrawable drawable) {
+        if(drawable != null){
+            Bitmap bitmap = drawable.getBitmap();
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            return stream.toByteArray();
+        }
+        return null;
+    }
+
+    public static List<AppInfo> getDialerApps(PackageManager packageManager, Context context) {
         List<AppInfo> dialerApps = new ArrayList<>();
         final Intent dialerIntent = new Intent();
         dialerIntent.setAction(Intent.ACTION_DIAL);
         List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(dialerIntent, 0);
         for (ResolveInfo resolveInfo : resolveInfos) {
             AppInfo appInfo = new AppInfo();
-            appInfo.setIcon(resolveInfo.loadIcon(packageManager));
-            appInfo.setPackageName(resolveInfo.activityInfo.packageName);
+            Drawable drawable = resolveInfo.loadIcon(packageManager);
+            byte[] bitmapData = getDrawableBytes((BitmapDrawable) drawable);
+            String packageName = resolveInfo.activityInfo.packageName;
+            appInfo.setPackageName(packageName);
+            if(packageName.contains(".")){
+                appInfo.setIconPath(packageName.replaceAll(".","")+".png");
+            }else{
+                appInfo.setIconPath(packageName+".png");
+            }
+            saveAppIcon(context, appInfo, bitmapData);
             appInfo.setAppName(packageManager.getApplicationLabel(resolveInfo.activityInfo.applicationInfo).toString());
             dialerApps.add(appInfo);
         }
