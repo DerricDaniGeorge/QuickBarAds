@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
@@ -35,6 +36,7 @@ import java.util.List;
 public class ChooseAppsFragment extends Fragment {
 //    private static final String APP_INFOS = "app_infos";
     private ArrayList<AppInfo> appInfos;
+    private AppDataAdapter adapter;
     public ChooseAppsFragment(ArrayList<AppInfo> appInfos) {
         // Required empty public constructor
         this.appInfos = appInfos;
@@ -55,6 +57,8 @@ public class ChooseAppsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Detect actionbar of the activity where this fragment is present
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -74,7 +78,7 @@ public class ChooseAppsFragment extends Fragment {
                 appsWithActivity.add(appInfo);
             }
         }
-        AppDataAdapter adapter = new AppDataAdapter(appsWithActivity,getContext());
+        adapter = new AppDataAdapter(appsWithActivity,getContext());
         recyclerView.setAdapter(adapter);
 //        PackageManager packageManager = getContext().getPackageManager();
 //        GridLayout grid = layout.findViewById(R.id.app_chooser_gridlayout);
@@ -109,4 +113,17 @@ public class ChooseAppsFragment extends Fragment {
 
         return layout;
     }
+
+    //Perform action if any icon is clicked from the Action bar
+    @Override
+    public  boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.selectAll:
+                //Select all checkboxes in the recyclerview
+                this.adapter.selectAllItems();
+                return true;
+        }
+        return  false;
+    }
+
 }

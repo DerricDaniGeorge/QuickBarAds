@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,8 +25,9 @@ import java.util.List;
 public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.MyViewHolder> {
     private final List<AppInfo> appInfos;
     private final Context context;
+    private boolean selectAllApps;
 
-    public AppDataAdapter  (List<AppInfo> appInfos, Context context) {
+    public AppDataAdapter(List<AppInfo> appInfos, Context context) {
         this.appInfos = appInfos;
         this.context = context;
     }
@@ -33,12 +36,13 @@ public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.MyViewHo
         private final ImageView appIcon;
         private final TextView appName;
         private final CheckBox appSelection;
+
         public MyViewHolder(View itemLayout) {
             super(itemLayout);
             //You can access each views in layout here
             appIcon = itemLayout.findViewById(R.id.app_icon);
-            appName=itemLayout.findViewById(R.id.app_name);
-            appSelection=itemLayout.findViewById(R.id.app_selection_checkbox);
+            appName = itemLayout.findViewById(R.id.app_name);
+            appSelection = itemLayout.findViewById(R.id.app_selection_checkbox);
         }
 
         public ImageView getAppIcon() {
@@ -48,9 +52,11 @@ public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.MyViewHo
         public TextView getAppName() {
             return appName;
         }
-        public CheckBox getAppSelection(){
+
+        public CheckBox getAppSelection() {
             return appSelection;
         }
+
     }
 
     @NonNull
@@ -67,14 +73,41 @@ public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.MyViewHo
 //        holder.getAppIcon().setImageDrawable(appInfos.get(position).getIcon());
 //        byte[] imageBytes = appInfos.get(position).getIcon();
 //        Bitmap bmp = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-        File filePath = context.getFileStreamPath(appInfos.get(position).getIconPath());
+        AppInfo appInfo = appInfos.get(position);
+        File filePath = context.getFileStreamPath(appInfo.getIconPath());
         Drawable icon = Drawable.createFromPath(filePath.toString());
+//        ImageView iconView = new ImageView(context);
+//        iconView.setImageDrawable(icon);
+//        //Set icon's height and width
+//        iconView.setLayoutParams(iconSize);
+
+        holder.getAppName().setText(appInfo.getAppName());
         holder.getAppIcon().setImageDrawable(icon);
-        holder.getAppName().setText(appInfos.get(position).getAppName());
+        CheckBox box = holder.getAppSelection();
+        box.setOnCheckedChangeListener(null);
+        if(selectAllApps){
+            box.setChecked(true);
+        }else{
+            box.setChecked(appInfo.isSelected());
+        }
+
+        box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                appInfo.setSelected(isChecked);
+            }
+        });
+
     }
 
     @Override
     public int getItemCount() {
         return appInfos.size();
+    }
+
+    public void selectAllItems(){
+        this.selectAllApps = true;
+        //Notify recyclerview data set is changed
+        notifyDataSetChanged();
     }
 }

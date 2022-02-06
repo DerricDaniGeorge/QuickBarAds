@@ -8,10 +8,12 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Tell the QuickBarManager class what to do
@@ -61,6 +64,7 @@ public class QuickBarManager {
         public boolean hideQuickBarLogo;
         public boolean showAllApps;
         public String quickbarChooseSide;
+        public Set<String> selectedApps;
     }
 
     public void addToWindow(View relativeLayout, QuickBarManager.Settings settings, ArrayList<AppInfo> appInfos) {
@@ -155,7 +159,7 @@ public class QuickBarManager {
             sortAppsByName(appInfos);
         }
         for (AppInfo appInfo : appInfos) {
-            System.out.println("appIcon: "+appInfo.getIcon());
+//            System.out.println("appIcon: "+appInfo.getIcon());
             Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(appInfo.getPackageName());
             //Exclude apps which don't have main activity (Avoid system services apps which don't have an UI)
             if (mainActivityIntent != null) {
@@ -164,6 +168,7 @@ public class QuickBarManager {
 //                Bitmap bmp = BitmapFactory.decodeByteArray(imageBytes,0,imageBytes.length);
 //                iconView.setImageBitmap(bmp);
                 File filePath = mContext.getFileStreamPath(appInfo.getIconPath());
+//                Log.d("filePathh",filePath.toString());
                 Drawable icon = Drawable.createFromPath(filePath.toString());
                 iconView.setImageDrawable(icon);
                 //Set icon's height and width
@@ -198,13 +203,16 @@ public class QuickBarManager {
                 AppInfo appInfo = new AppInfo();
                 Drawable drawable = applicationInfo.loadIcon(packageManager);
                 //Convert image to bytes
-                byte[] bitmapData = getDrawableBytes((BitmapDrawable) drawable);
+                byte[] bitmapData = getDrawableBytes(getBitMapFromDrawable(drawable));
                 String packageName = applicationInfo.packageName;
+//                System.out.println("Package name is: "+packageName);
                 appInfo.setPackageName(packageName);
                 if(packageName.contains(".")){
-                   appInfo.setIconPath(packageName.replaceAll(".","")+".png");
+                   appInfo.setIconPath(packageName.replaceAll("\\.","")+".png");
+//                   System.out.println("getAllInstalledApps Inside if -->"+appInfo.getIconPath());
                 }else{
                     appInfo.setIconPath(packageName+".png");
+//                    System.out.println("getAllInstalledApps Inside else -->"+appInfo.getIconPath());
                 }
                 saveAppIcon(context, appInfo, bitmapData);
                 appInfo.setAppName(packageManager.getApplicationLabel(applicationInfo).toString());
@@ -218,13 +226,16 @@ public class QuickBarManager {
             for (PackageInfo packageInfo : packs) {
                 AppInfo appInfo = new AppInfo();
                 Drawable drawable = packageInfo.applicationInfo.loadIcon(packageManager);
-                byte[] bitmapData = getDrawableBytes((BitmapDrawable) drawable);
+                byte[] bitmapData = getDrawableBytes(getBitMapFromDrawable(drawable));
                 String packageName = packageInfo.packageName;
+//                System.out.println("Package name is: "+packageName);
                 appInfo.setPackageName(packageName);
                 if(packageName.contains(".")){
-                    appInfo.setIconPath(packageName.replaceAll(".","")+".png");
+                    appInfo.setIconPath(packageName.replaceAll("\\.","_")+".png");
+//                    System.out.println("getAllInstalledApps Inside if -->"+appInfo.getIconPath());
                 }else{
                     appInfo.setIconPath(packageName+".png");
+//                    System.out.println("getAllInstalledApps Inside else -->"+appInfo.getIconPath());
                 }
                 saveAppIcon(context, appInfo, bitmapData);
                 appInfos.add(appInfo);
@@ -252,15 +263,14 @@ public class QuickBarManager {
     }
 
     /**
-     * Convert Drawable icon to bytes array
-     * @param drawable
+     * Convert Bitmap icon to bytes array
+     * @param bitmap
      * @return
      */
-    private static byte[] getDrawableBytes(BitmapDrawable drawable) {
-        if(drawable != null){
-            Bitmap bitmap = drawable.getBitmap();
+    private static byte[] getDrawableBytes(Bitmap bitmap) {
+        if(bitmap != null){
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
             return stream.toByteArray();
         }
         return null;
@@ -274,11 +284,11 @@ public class QuickBarManager {
         for (ResolveInfo resolveInfo : resolveInfos) {
             AppInfo appInfo = new AppInfo();
             Drawable drawable = resolveInfo.loadIcon(packageManager);
-            byte[] bitmapData = getDrawableBytes((BitmapDrawable) drawable);
+            byte[] bitmapData = getDrawableBytes(getBitMapFromDrawable(drawable));
             String packageName = resolveInfo.activityInfo.packageName;
             appInfo.setPackageName(packageName);
             if(packageName.contains(".")){
-                appInfo.setIconPath(packageName.replaceAll(".","")+".png");
+                appInfo.setIconPath(packageName.replaceAll("\\.","")+".png");
             }else{
                 appInfo.setIconPath(packageName+".png");
             }
@@ -297,6 +307,14 @@ public class QuickBarManager {
             }
         }
         Collections.sort(appInfos, new AppNameAscendingComparator());
+    }
+
+    private static Bitmap getBitMapFromDrawable(Drawable drawable){
+        final Bitmap bmp = Bitmap.createBitmap(drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight(),Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(bmp);
+        drawable.setBounds(0,0,canvas.getWidth(),canvas.getHeight());
+        drawable.draw(canvas);
+        return  bmp;
     }
 
 
