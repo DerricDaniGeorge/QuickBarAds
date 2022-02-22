@@ -17,4 +17,15 @@ public class AppInfo implements Serializable {
     //Icon path in device storage
     private String iconPath;
     private boolean selected;
+
+    @Override
+    public  boolean equals (Object object){
+        if(object instanceof AppInfo){
+            AppInfo a = (AppInfo) object;
+            if(a.getPackageName().equals(this.packageName)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -6,4 +6,9 @@
         android:icon="@drawable/outline_check_circle_black_36"
         android:title="Select all apps"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/deselectAll"
+        android:icon="@drawable/outline_hide_source_black_36"
+        android:title="Deselect all apps"
+        app:showAsAction="ifRoom" />
 </menu>

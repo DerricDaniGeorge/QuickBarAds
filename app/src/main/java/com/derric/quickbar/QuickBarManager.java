@@ -7,13 +7,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +62,7 @@ public class QuickBarManager {
         public boolean showAllApps;
         public String quickbarChooseSide;
         public Set<String> selectedApps;
+        public boolean wasAllAppsSelected;
     }
 
     public void addToWindow(View relativeLayout, QuickBarManager.Settings settings, ArrayList<AppInfo> appInfos) {
@@ -155,9 +153,38 @@ public class QuickBarManager {
         LinearLayout.LayoutParams iconSize = new LinearLayout.LayoutParams(110, 110);
         PackageManager packageManager = mContext.getPackageManager();
 //        List<AppInfo> appInfos = getAllInstalledApps(packageManager);
-        if (settings.showAppsInAscendingOrder) {
-            sortAppsByName(appInfos);
+
+        if(settings.wasAllAppsSelected){
+            System.out.println(" wasAllAppsseleted is true");
+            //Show all apps
+            if (settings.showAppsInAscendingOrder) {
+                sortAppsByName(appInfos);
+            }
+            showApps(innerLayout, settings, relativeLayout, appInfos, iconSize, packageManager);
+        }else{
+            //Show only user selected apps
+            Set<String> userSelectedApps = settings.selectedApps;
+            // This null check is required, if this app is a fresh install and user didn't choose
+            //any apps yet
+            if(userSelectedApps != null){
+                ArrayList<AppInfo> selectedApps = new ArrayList<>();
+                for(String packageName: userSelectedApps){
+                    for(AppInfo appInfo: appInfos){
+                        if(appInfo.getPackageName().equals(packageName)){
+                            selectedApps.add(appInfo);
+                        }
+                    }
+                }
+                if (settings.showAppsInAscendingOrder) {
+                    sortAppsByName(selectedApps);
+                }
+                showApps(innerLayout, settings, relativeLayout, selectedApps, iconSize, packageManager);
+            }
+
         }
+    }
+
+    private void showApps(LinearLayout innerLayout, Settings settings, View relativeLayout, ArrayList<AppInfo> appInfos, LinearLayout.LayoutParams iconSize, PackageManager packageManager) {
         for (AppInfo appInfo : appInfos) {
 //            System.out.println("appIcon: "+appInfo.getIcon());
             Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(appInfo.getPackageName());
@@ -184,7 +211,6 @@ public class QuickBarManager {
             }
         }
     }
-
 
 
     public void removeAllQuickBarsFromWindow() {

@@ -25,12 +25,12 @@ import java.util.List;
 public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.MyViewHolder> {
     private final List<AppInfo> appInfos;
     private final Context context;
-    private boolean selectAllApps;
 
     public AppDataAdapter(List<AppInfo> appInfos, Context context) {
         this.appInfos = appInfos;
         this.context = context;
     }
+
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final ImageView appIcon;
@@ -84,19 +84,24 @@ public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.MyViewHo
         holder.getAppName().setText(appInfo.getAppName());
         holder.getAppIcon().setImageDrawable(icon);
         CheckBox box = holder.getAppSelection();
-        box.setOnCheckedChangeListener(null);
-        if(selectAllApps){
-            box.setChecked(true);
-        }else{
-            box.setChecked(appInfo.isSelected());
-        }
-
+//        box.setOnCheckedChangeListener(null);
         box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 appInfo.setSelected(isChecked);
+//                if(!isChecked){
+//                    selectAllApps = false;
+//                }
             }
         });
+//        if(selectAllApps){
+//            box.setChecked(true);
+//        }else{
+            box.setChecked(appInfo.isSelected());
+
+//        }
+
+
 
     }
 
@@ -106,7 +111,19 @@ public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.MyViewHo
     }
 
     public void selectAllItems(){
-        this.selectAllApps = true;
+        for(AppInfo appInfo: appInfos){
+            appInfo.setSelected(true);
+        }
+//        this.selectAllApps = true;
+        //Notify recyclerview data set is changed
+        notifyDataSetChanged();
+    }
+
+    public void deselectAllItems(){
+        for(AppInfo appInfo: appInfos){
+            appInfo.setSelected(false);
+        }
+//        this.selectAllApps = true;
         //Notify recyclerview data set is changed
         notifyDataSetChanged();
     }

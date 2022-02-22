@@ -143,6 +143,7 @@ public class QuickBarService extends Service {
         settings.hideQuickBarLogo = preferences.getBoolean("hideLogo",false);
         settings.quickbarChooseSide = preferences.getString("chooseSide","Right");
         settings.selectedApps = preferences.getStringSet("selectedApps",null);
+        settings.wasAllAppsSelected = preferences.getBoolean("wasAllAppsSelected",false);
         return settings;
     }
 }

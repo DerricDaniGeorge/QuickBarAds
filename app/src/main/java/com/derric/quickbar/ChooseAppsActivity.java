@@ -24,6 +24,7 @@ public class ChooseAppsActivity extends AppCompatActivity {
 
     private ArrayList<AppInfo> appInfos;
     private  Set<String> selectedApps;
+    private ChooseAppsFragment chooseAppsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,7 @@ public class ChooseAppsActivity extends AppCompatActivity {
         //To set a fragment to an activity, we have to first create a fragment transaction
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         //Create the fragment object
-        ChooseAppsFragment chooseAppsFragment = new ChooseAppsFragment(appInfos);
+        chooseAppsFragment = new ChooseAppsFragment(appInfos);
         //Add the main menu fragment to the activity layout
         transaction.replace(R.id.container, chooseAppsFragment);
         transaction.commit();
@@ -58,8 +59,14 @@ public class ChooseAppsActivity extends AppCompatActivity {
         for(AppInfo appInfo : appInfos){
             if(appInfo.isSelected()){
 //                builder.append(appInfo.getPackageName()).append(',');
+//                System.out.println("App: "+appInfo.getPackageName()+" saved to settings");
                 selectedApps.add(appInfo.getPackageName());
             }
+        }
+        if(chooseAppsFragment.getAllAppsSelected()){
+            editor.putBoolean("wasAllAppsSelected",true);
+        }else{
+            editor.putBoolean("wasAllAppsSelected",false);
         }
         editor.putStringSet("selectedApps",selectedApps);
         editor.commit();
