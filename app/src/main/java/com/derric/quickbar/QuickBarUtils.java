@@ -1,0 +1,26 @@
+package com.derric.quickbar;
+
+import android.view.Gravity;
+import android.view.WindowManager;
+
+import com.derric.quickbar.constants.AppConstants;
+
+public class QuickBarUtils {
+
+    public static void setGravity(WindowManager.LayoutParams layoutParams, QuickBarManager.Settings settings) {
+        if (settings.quickbarChooseSide.equals(AppConstants.RIGHT) && settings.quickbarChoosePosition.equals(AppConstants.TOP)) {
+            //Display the quickbar on top right of the screen
+            layoutParams.gravity = Gravity.RIGHT | Gravity.TOP;
+        } else if (settings.quickbarChooseSide.equals(AppConstants.RIGHT) && settings.quickbarChoosePosition.equals(AppConstants.CENTER)) {
+            layoutParams.gravity = Gravity.RIGHT | Gravity.CENTER;
+        } else if (settings.quickbarChooseSide.equals(AppConstants.RIGHT) && settings.quickbarChoosePosition.equals(AppConstants.BOTTOM)) {
+            layoutParams.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+        } else if (settings.quickbarChooseSide.equals(AppConstants.LEFT) && settings.quickbarChoosePosition.equals(AppConstants.TOP)) {
+            layoutParams.gravity = Gravity.LEFT | Gravity.TOP;
+        } else if (settings.quickbarChooseSide.equals(AppConstants.LEFT) && settings.quickbarChoosePosition.equals(AppConstants.CENTER)) {
+            layoutParams.gravity = Gravity.LEFT | Gravity.CENTER;
+        } else if (settings.quickbarChooseSide.equals(AppConstants.LEFT) && settings.quickbarChoosePosition.equals(AppConstants.BOTTOM)) {
+            layoutParams.gravity = Gravity.LEFT | Gravity.BOTTOM;
+        }
+    }
+}

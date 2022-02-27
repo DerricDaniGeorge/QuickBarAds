@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 
+import com.derric.quickbar.constants.AppConstants;
 import com.derric.quickbar.models.AppInfo;
 
 import java.io.ByteArrayOutputStream;
@@ -51,6 +53,7 @@ public class QuickBarManager {
         this.mContext = context;
         this.mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         this.mViews = new ArrayList<>();
+
     }
 
     public static class Settings {
@@ -61,13 +64,13 @@ public class QuickBarManager {
         public boolean hideQuickBarLogo;
         public boolean showAllApps;
         public String quickbarChooseSide;
+        public String quickbarChoosePosition;
         public Set<String> selectedApps;
         public boolean wasAllAppsSelected;
     }
 
     public void addToWindow(View relativeLayout, QuickBarManager.Settings settings, ArrayList<AppInfo> appInfos) {
         QuickBar quickBar = new QuickBar(mContext, settings);
-
         mViews.add(relativeLayout);
         //New implementation starts -->
         ImageView hideArrow = relativeLayout.findViewById(R.id.hide_arrow);
@@ -77,6 +80,16 @@ public class QuickBarManager {
         }else{
             showIcon = (ImageView) inflater.inflate(R.layout.icon_layout_right, null, false);
         }
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                relativeLayout.setVisibility(View.GONE);
+                if(showIcon != null){
+                    showIcon.setVisibility(View.VISIBLE);
+                }
+            }
+        };
         //Hide the show icon first and then only add to screen
         showIcon.setVisibility(View.GONE);
         WindowManager.LayoutParams params = getLayoutParams(settings);
@@ -84,6 +97,8 @@ public class QuickBarManager {
         showIcon.setOnClickListener(vi -> {
             showIcon.setVisibility(View.GONE);
             relativeLayout.setVisibility(View.VISIBLE);
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable,10000);
         });
         //Add the icon to the screen
         mWindowManager.addView(showIcon, params);
@@ -100,16 +115,22 @@ public class QuickBarManager {
         System.out.println("Appinfos size:"+appInfos.size());
         getAllApps2(thirdLinear, settings, relativeLayout,appInfos);
         mWindowManager.addView(relativeLayout, quickBar.windowLayoutParams);
+        //Hide quickbar after a delay
+        handler.removeCallbacks(runnable);
+        handler.postDelayed(runnable,10000);
     }
 
+    //Parameters for show icon
     @NonNull
     private WindowManager.LayoutParams getLayoutParams(QuickBarManager.Settings settings) {
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-        if (settings.quickbarChooseSide.equals("Right")) {
+        //Tells which side of the screen we need to show the show icon
+        if (settings.quickbarChooseSide.equals(AppConstants.RIGHT)) {
             params.gravity = Gravity.RIGHT | Gravity.CENTER;
         } else {
             params.gravity = Gravity.LEFT | Gravity.CENTER;
         }
+//        QuickBarUtils.setGravity(params,settings);
         params.width = 60;
         params.height = 60;
         params.type = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 ?

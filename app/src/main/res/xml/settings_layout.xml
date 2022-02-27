@@ -27,13 +27,19 @@
         android:singleLineTitle="false"
         android:title="Hide QuickBar logo" />
     <ListPreference
-        android:defaultValue="Right"
-        android:entries="@array/settings_values_quickbar_align"
-        android:entryValues="@array/settings_values_quickbar_align"
+        android:defaultValue="@string/left"
+        android:entries="@array/settings_values_align"
+        android:entryValues="@array/settings_values_align"
         android:key="chooseSide"
-        android:title="@string/settings_side" />
+        android:title="@string/settings_side_quickbar" />
+    <ListPreference
+        android:defaultValue="@string/center"
+        android:entries="@array/settings_values_position"
+        android:entryValues="@array/settings_values_position"
+        android:key="choosePosition"
+        android:title="@string/settings_position_quickbar" />
     <Preference
         android:key="chooseApps"
-        android:title="Select Apps">
+        android:title="Select Apps...">
     </Preference>
 </androidx.preference.PreferenceScreen>

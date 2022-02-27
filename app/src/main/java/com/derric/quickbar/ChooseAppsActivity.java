@@ -59,7 +59,8 @@ public class ChooseAppsActivity extends AppCompatActivity {
         for(AppInfo appInfo : appInfos){
             if(appInfo.isSelected()){
 //                builder.append(appInfo.getPackageName()).append(',');
-//                System.out.println("App: "+appInfo.getPackageName()+" saved to settings");
+//                System.out.println("App: "+appInfo.getPackageName()+"
+//                saved to settings");
                 selectedApps.add(appInfo.getPackageName());
             }
         }

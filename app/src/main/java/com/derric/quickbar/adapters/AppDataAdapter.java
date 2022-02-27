@@ -97,10 +97,9 @@ public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.MyViewHo
 //        if(selectAllApps){
 //            box.setChecked(true);
 //        }else{
-            box.setChecked(appInfo.isSelected());
+        box.setChecked(appInfo.isSelected());
 
 //        }
-
 
 
     }
@@ -110,21 +109,21 @@ public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.MyViewHo
         return appInfos.size();
     }
 
-    public void selectAllItems(){
-        for(AppInfo appInfo: appInfos){
+    public void selectAllItems() {
+        for (AppInfo appInfo : appInfos) {
             appInfo.setSelected(true);
         }
 //        this.selectAllApps = true;
-        //Notify recyclerview data set is changed
+        //Notify recyclerview data set is changed, so that the changes will be reflected in the list
         notifyDataSetChanged();
     }
 
-    public void deselectAllItems(){
-        for(AppInfo appInfo: appInfos){
+    public void deselectAllItems() {
+        for (AppInfo appInfo : appInfos) {
             appInfo.setSelected(false);
         }
 //        this.selectAllApps = true;
-        //Notify recyclerview data set is changed
+        //Notify recyclerview data set is changed, so that the changes will be reflected in the list
         notifyDataSetChanged();
     }
 }

@@ -23,6 +23,7 @@ import androidx.preference.PreferenceManager;
 import com.derric.quickbar.MainActivity;
 import com.derric.quickbar.QuickBarManager;
 import com.derric.quickbar.R;
+import com.derric.quickbar.constants.AppConstants;
 import com.derric.quickbar.models.AppInfo;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class QuickBarService extends Service {
         QuickBarManager.Settings userSettings = loadUserSettings(this);
         LayoutInflater inflater = LayoutInflater.from(this);
         RelativeLayout relativeLayout;
-        if(userSettings.quickbarChooseSide.equals("Right")){
+        if(userSettings.quickbarChooseSide.equals(AppConstants.RIGHT)){
             relativeLayout = (RelativeLayout) inflater.inflate(R.layout.layout_quickbar_right,null,false);
         }else{
             relativeLayout = (RelativeLayout) inflater.inflate(R.layout.layout_quickbar_left,null,false);
@@ -141,7 +142,8 @@ public class QuickBarService extends Service {
         settings.hideQuickBarOnAppLaunch = preferences.getBoolean("closeQuickBar",false);
         settings.showAllApps = preferences.getBoolean("allApps",false);
         settings.hideQuickBarLogo = preferences.getBoolean("hideLogo",false);
-        settings.quickbarChooseSide = preferences.getString("chooseSide","Right");
+        settings.quickbarChooseSide = preferences.getString("chooseSide", AppConstants.LEFT);
+        settings.quickbarChoosePosition = preferences.getString("choosePosition",AppConstants.CENTER);
         settings.selectedApps = preferences.getStringSet("selectedApps",null);
         settings.wasAllAppsSelected = preferences.getBoolean("wasAllAppsSelected",false);
         return settings;

@@ -11,6 +11,8 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 
+import com.derric.quickbar.constants.AppConstants;
+
 public class QuickBar {
     //default height
     public static final int DEFAULT_HEIGHT = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -43,11 +45,6 @@ public class QuickBar {
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
         //Semi transparent
         windowLayoutParams.format = PixelFormat.TRANSLUCENT;
-        if (settings.quickbarChooseSide.equals("Right")) {
-            //Display the quickbar on top right of the screen
-            windowLayoutParams.gravity = Gravity.CENTER | Gravity.RIGHT;
-        } else {
-            windowLayoutParams.gravity = Gravity.CENTER | Gravity.LEFT;
-        }
+        QuickBarUtils.setGravity(windowLayoutParams, settings);
     }
 }
