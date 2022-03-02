@@ -1,9 +1,12 @@
 package com.derric.quickbar;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,6 +17,7 @@ import com.derric.quickbar.constants.AppConstants;
 import com.derric.quickbar.fragments.ChooseAppsFragment;
 import com.derric.quickbar.fragments.MainMenu;
 import com.derric.quickbar.models.AppInfo;
+import com.derric.quickbar.services.QuickBarService;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -71,8 +75,28 @@ public class ChooseAppsActivity extends AppCompatActivity {
         }
         editor.putStringSet("selectedApps",selectedApps);
         editor.commit();
+
+//        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+//        alert.setMessage("To reflect the changes, you need to stop and launch the QuickBar again.");
+//        alert.setCancelable(false);
+//        alert.setPositiveButton("RELAUNCH", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                Intent stopIntent = new Intent(alert.getContext(), QuickBarService.class);
+//                //Get the activity and call stop service
+//                alert.getContext().stopService(stopIntent);
+//                finish();
+//            }
+//        });
+//        alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                //Go back to previous screen
+//                finish();
+//            }
+//        });
+//        alert.show();
         super.onBackPressed();
     }
-
 
 }

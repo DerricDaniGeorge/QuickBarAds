@@ -140,7 +140,6 @@ public class QuickBarService extends Service {
         settings.showAppsInAscendingOrder=preferences.getBoolean("sortApps",false);
         settings.autoStartAppOnBoot = preferences.getBoolean("autostart",false);
         settings.hideQuickBarOnAppLaunch = preferences.getBoolean("closeQuickBar",false);
-        settings.showAllApps = preferences.getBoolean("allApps",false);
         settings.hideQuickBarLogo = preferences.getBoolean("hideLogo",false);
         settings.quickbarChooseSide = preferences.getString("chooseSide", AppConstants.LEFT);
         settings.quickbarChoosePosition = preferences.getString("choosePosition",AppConstants.CENTER);

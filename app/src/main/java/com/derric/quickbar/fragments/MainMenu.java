@@ -93,7 +93,7 @@ public class MainMenu extends Fragment {
         menuView.findViewById(R.id.settings_button).setOnClickListener(v -> {
             final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.container, new SettingsMenu(appInfos));
-            ft.addToBackStack(null);
+            ft.addToBackStack("settingsFragment");
             ft.commit();
         });
         //Stop QuickBar service
