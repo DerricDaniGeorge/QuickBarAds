@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,8 +23,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.derric.quickbar.QuickBarManager;
 import com.derric.quickbar.R;
+import com.derric.quickbar.constants.AppConstants;
+import com.derric.quickbar.models.AppInfo;
 import com.derric.quickbar.services.QuickBarService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,6 +49,7 @@ public class MainMenu extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private ArrayList<AppInfo> appInfos;
 
     public MainMenu() {
         // Required empty public constructor
@@ -69,8 +77,7 @@ public class MainMenu extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            appInfos = (ArrayList<AppInfo>)  getArguments().getSerializable("appInfos");
         }
     }
 
@@ -83,10 +90,10 @@ public class MainMenu extends Fragment {
         menuView.findViewById(R.id.launch_quickbar_button).setOnClickListener((v -> {
             showQuickBar(getActivity(), true);
         }));
-        menuView.findViewById(R.id.settings_button).setOnClickListener(v ->{
+        menuView.findViewById(R.id.settings_button).setOnClickListener(v -> {
             final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.container, new SettingsMenu());
-            ft.addToBackStack(null);
+            ft.replace(R.id.container, new SettingsMenu(appInfos));
+            ft.addToBackStack("settingsFragment");
             ft.commit();
         });
         //Stop QuickBar service
@@ -135,6 +142,8 @@ public class MainMenu extends Fragment {
     private void startQuickBarService(Activity activity) {
         Class<? extends Service> service = QuickBarService.class;
         Intent startIntent = new Intent(activity, service);
+        //Add the apps info data, so that it can retrieved at other end
+        startIntent.putExtra(AppConstants.APP_INFOS,appInfos);
         ContextCompat.startForegroundService(activity, startIntent);
     }
 }

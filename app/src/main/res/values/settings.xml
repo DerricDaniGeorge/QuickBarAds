@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_side">Choose side</string>
-    <string-array name="settings_values_quickbar_align">
-        <item>Left</item>
-        <item>Right</item>
+    <string name="settings_side_quickbar">Choose QuickBar side</string>
+    <string-array name="settings_values_align">
+        <item>@string/left</item>
+        <item>@string/right</item>
     </string-array>
+
+    <string name="settings_position_quickbar">Choose QuickBar position</string>
+    <string-array name="settings_values_position">
+        <item>@string/top</item>
+        <item>@string/center</item>
+        <item>@string/bottom</item>
+    </string-array>
+
+    <string name="settings_side_show_icon">Choose show icon side</string>
+    <string name="settings_position_show_icon">Choose show icon position</string>
 </resources>

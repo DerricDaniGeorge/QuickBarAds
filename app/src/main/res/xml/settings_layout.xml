@@ -1,40 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <SwitchPreferenceCompat
         android:key="transparentBar"
         android:singleLineTitle="false"
-        android:title="Transparent background" />
+        android:title="Transparent background"
+        app:iconSpaceReserved="false" />
     <SwitchPreferenceCompat
         android:key="sortApps"
         android:singleLineTitle="false"
-        android:title="Show apps in ascending order" />
+        android:title="Show apps in ascending order"
+        app:iconSpaceReserved="false" />
     <SwitchPreferenceCompat
         android:key="autostart"
         android:singleLineTitle="false"
-        android:title="Start QuickBar on device boot" />
+        android:title="Start QuickBar on device boot"
+        app:iconSpaceReserved="false" />
     <SwitchPreferenceCompat
         android:key="closeQuickBar"
         android:singleLineTitle="false"
         android:summary="Hide QuickBar when an app is launched from QuickBar"
-        android:title="Hide QuickBar" />
-    <SwitchPreferenceCompat
-        android:key="allApps"
-        android:singleLineTitle="false"
-        android:summary="Show all apps in the device"
-        android:title="Show all apps" />
+        android:title="Hide QuickBar"
+        app:iconSpaceReserved="false" />
     <SwitchPreferenceCompat
         android:key="hideLogo"
         android:singleLineTitle="false"
-        android:title="Hide QuickBar logo" />
+        android:title="Hide QuickBar logo"
+        app:iconSpaceReserved="false" />
     <ListPreference
-        android:defaultValue="Right"
-        android:entries="@array/settings_values_quickbar_align"
-        android:entryValues="@array/settings_values_quickbar_align"
+        android:defaultValue="@string/left"
+        android:entries="@array/settings_values_align"
+        android:entryValues="@array/settings_values_align"
         android:key="chooseSide"
-        android:title="@string/settings_side" />
+        android:title="@string/settings_side_quickbar"
+        app:iconSpaceReserved="false" />
+    <ListPreference
+        android:defaultValue="@string/center"
+        android:entries="@array/settings_values_position"
+        android:entryValues="@array/settings_values_position"
+        android:key="choosePosition"
+        android:title="@string/settings_position_quickbar"
+        app:iconSpaceReserved="false" />
     <Preference
         android:key="chooseApps"
-        android:title="Select Apps">
-        <intent android:action="your.action.string" />
-    </Preference>
+        android:title="Select Apps ..."
+        app:iconSpaceReserved="false"></Preference>
 </androidx.preference.PreferenceScreen>
