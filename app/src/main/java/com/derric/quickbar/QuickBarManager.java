@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -274,14 +275,16 @@ public class QuickBarManager {
     public static List<AppInfo> getAllInstalledApps(PackageManager packageManager, Context context) {
         List<AppInfo> appInfos = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            List<ApplicationInfo> appList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+//            List<ApplicationInfo> appList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+            List<ApplicationInfo> appList = packageManager.getInstalledApplications(0);
+
             for (ApplicationInfo applicationInfo : appList) {
+                String packageName = applicationInfo.packageName;
                 AppInfo appInfo = new AppInfo();
                 Drawable drawable = applicationInfo.loadIcon(packageManager);
                 //Convert image to bytes
                 byte[] bitmapData = getDrawableBytes(getBitMapFromDrawable(drawable));
-                String packageName = applicationInfo.packageName;
-//                System.out.println("Package name is: "+packageName);
+                System.out.println("Package name is: "+packageName);
                 appInfo.setPackageName(packageName);
                 if (packageName.contains(".")) {
                     appInfo.setIconPath(packageName.replaceAll("\\.", "") + ".png");
@@ -293,9 +296,34 @@ public class QuickBarManager {
                 saveAppIcon(context, appInfo, bitmapData);
                 appInfo.setAppName(packageManager.getApplicationLabel(applicationInfo).toString());
                 appInfos.add(appInfo);
-//                Log.d("appNames", appInfo.getAppName());
             }
-            appInfos.addAll(getDialerApps(packageManager, context));
+//            Intent mainIntent = new Intent(Intent.ACTION_MAIN);
+//            mainIntent.addCategory(Intent.CATEGORY_HOME);
+//            List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(mainIntent, 0);
+//            for(ResolveInfo resolveInfo : resolveInfos) {
+//                String packageName = resolveInfo.activityInfo.packageName;
+//                AppInfo appInfo = new AppInfo();
+//                Drawable drawable = resolveInfo.loadIcon(packageManager);
+//                //Convert image to bytes
+//                byte[] bitmapData = getDrawableBytes(getBitMapFromDrawable(drawable));
+//                System.out.println("Package name is: "+packageName);
+//                appInfo.setPackageName(packageName);
+//                if (packageName.contains(".")) {
+//                    appInfo.setIconPath(packageName.replaceAll("\\.", "") + ".png");
+////                   System.out.println("getAllInstalledApps Inside if -->"+appInfo.getIconPath());
+//                } else {
+//                    appInfo.setIconPath(packageName + ".png");
+////                    System.out.println("getAllInstalledApps Inside else -->"+appInfo.getIconPath());
+//                }
+//                saveAppIcon(context, appInfo, bitmapData);
+//                appInfo.setAppName(packageManager.getApplicationLabel(resolveInfo.activityInfo.applicationInfo).toString());
+//            }
+            List<AppInfo> dialerApps = getDialerApps(packageManager, context);
+            for(AppInfo dialerApp: dialerApps){
+                if(!appInfos.contains(dialerApp)){
+                    appInfos.add(dialerApp);
+                }
+            }
 
         } else {
             List<PackageInfo> packs = packageManager.getInstalledPackages(0);
@@ -314,11 +342,15 @@ public class QuickBarManager {
 //                    System.out.println("getAllInstalledApps Inside else -->"+appInfo.getIconPath());
                 }
                 saveAppIcon(context, appInfo, bitmapData);
-                appInfos.add(appInfo);
                 appInfo.setAppName(packageManager.getApplicationLabel(packageInfo.applicationInfo).toString());
-//                Log.d("appNames", appInfo.getAppName());
+                appInfos.add(appInfo);
             }
-            appInfos.addAll(getDialerApps(packageManager, context));
+            List<AppInfo> dialerApps = getDialerApps(packageManager, context);
+            for(AppInfo dialerApp: dialerApps){
+                if(!appInfos.contains(dialerApp)){
+                    appInfos.add(dialerApp);
+                }
+            }
         }
         return appInfos;
     }
