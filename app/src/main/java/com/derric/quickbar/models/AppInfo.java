@@ -22,7 +22,7 @@ public class AppInfo implements Serializable {
     public  boolean equals (Object object){
         if(object instanceof AppInfo){
             AppInfo a = (AppInfo) object;
-            if(a.getPackageName().equals(this.packageName)){
+            if(a.getAppName().equals(this.appName)){
                 return true;
             }
         }

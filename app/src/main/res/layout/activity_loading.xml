@@ -1,0 +1,23 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_centerHorizontal="true"
+        android:max="100"
+        android:indeterminate="true"
+        android:progress="45"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fetching applications in the device ..."
+        android:layout_below="@+id/progressBar"
+        android:layout_marginTop="50dp"
+        />
+
+</RelativeLayout>

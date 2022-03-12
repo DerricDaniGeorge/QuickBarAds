@@ -1,5 +1,6 @@
 package com.derric.quickbar;
 
+import android.content.Context;
 import android.view.Gravity;
 import android.view.WindowManager;
 
@@ -22,5 +23,12 @@ public class QuickBarUtils {
         } else if (settings.quickbarChooseSide.equals(AppConstants.LEFT) && settings.quickbarChoosePosition.equals(AppConstants.BOTTOM)) {
             layoutParams.gravity = Gravity.LEFT | Gravity.BOTTOM;
         }
+    }
+
+    public static int dpToPx(int dp, Context context) {
+        float density = context.getResources()
+                .getDisplayMetrics()
+                .density;
+        return Math.round((float) dp * density);
     }
 }
