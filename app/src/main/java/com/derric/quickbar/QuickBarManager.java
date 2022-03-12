@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
@@ -53,7 +54,7 @@ public class QuickBarManager {
     //Stores each Views added to the screen
     private final List<View> mViews;
     //Stores showIcon
-    private RelativeLayout showIcon;
+    private ImageView showIcon;
 
     public QuickBarManager(Context context) {
         this.mContext = context;
@@ -79,6 +80,9 @@ public class QuickBarManager {
         public int showIconSize;
         public int hideIconSize;
         public int hideQuickBarSeconds;
+        public String showIconChooseSide;
+        public String showIconChoosePosition;
+
     }
 
     public void addToWindow(View relativeLayout, QuickBarManager.Settings settings, ArrayList<AppInfo> appInfos) {
@@ -87,21 +91,18 @@ public class QuickBarManager {
         mViews.add(relativeLayout);
         //New implementation starts -->
         ImageView hideArrow = relativeLayout.findViewById(R.id.hide_arrow);
+        //Set transparency for hide button
         hideArrow.setAlpha(settings.hideIconTransparency / 100F);
         int hideIconPixel = QuickBarUtils.dpToPx(settings.hideIconSize, mContext);
         LinearLayout.LayoutParams hideIconSize = new LinearLayout.LayoutParams(hideIconPixel, hideIconPixel);
         hideArrow.setLayoutParams(hideIconSize);
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        if (settings.quickbarChooseSide.equals(AppConstants.RIGHT)) {
-            showIcon = (RelativeLayout) inflater.inflate(R.layout.icon_layout_left, null, false);
+        if (settings.showIconChooseSide.equals(AppConstants.RIGHT)) {
+            showIcon = (ImageView) inflater.inflate(R.layout.icon_layout_left, null, false);
         } else {
-            showIcon = (RelativeLayout) inflater.inflate(R.layout.icon_layout_right, null, false);
+            showIcon = (ImageView) inflater.inflate(R.layout.icon_layout_right, null, false);
         }
         showIcon.setAlpha(settings.showIconTransparency / 100F);
-        int showIconPixel = QuickBarUtils.dpToPx(settings.showIconSize, mContext);
-        RelativeLayout.LayoutParams showIconSize = new RelativeLayout.LayoutParams(showIconPixel, showIconPixel);
-        showIcon.findViewById(R.id.left_arrow).setLayoutParams(showIconSize);
-//        showIcon.setLayoutParams(showIconSize);
         Handler handler = new Handler();
         Runnable runnable = new Runnable() {
             @Override
@@ -114,7 +115,8 @@ public class QuickBarManager {
         };
         //Hide the show icon first and then only add to screen
         showIcon.setVisibility(View.GONE);
-        WindowManager.LayoutParams params = getLayoutParams(settings);
+        //Get layout params for showIcon
+        WindowManager.LayoutParams showIconParams = getLayoutParams(settings);
         //When show button is clicked, show the quickbar
         showIcon.setOnClickListener(vi -> {
             showIcon.setVisibility(View.GONE);
@@ -123,7 +125,7 @@ public class QuickBarManager {
             handler.postDelayed(runnable, settings.hideQuickBarSeconds * 1000);
         });
         //Add the icon to the screen
-        mWindowManager.addView(showIcon, params);
+        mWindowManager.addView(showIcon, showIconParams);
         hideArrow.setOnClickListener(v -> {
             relativeLayout.setVisibility(View.GONE);
             showIcon.setVisibility(View.VISIBLE);
@@ -148,14 +150,10 @@ public class QuickBarManager {
     private WindowManager.LayoutParams getLayoutParams(QuickBarManager.Settings settings) {
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
         //Tells which side of the screen we need to show the show icon
-        if (settings.quickbarChooseSide.equals(AppConstants.RIGHT)) {
-            params.gravity = Gravity.RIGHT | Gravity.CENTER;
-        } else {
-            params.gravity = Gravity.LEFT | Gravity.CENTER;
-        }
-//        QuickBarUtils.setGravity(params,settings);
-        params.width = 60;
-        params.height = 60;
+        QuickBarUtils.setGravityShowIcon(params,settings);
+        int showIconPixels = QuickBarUtils.dpToPx(settings.showIconSize,mContext);
+        params.width = showIconPixels;
+        params.height = showIconPixels;
         params.type = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 ?
                 WindowManager.LayoutParams.TYPE_PRIORITY_PHONE : WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |

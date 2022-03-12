@@ -41,6 +41,20 @@
         android:key="choosePosition"
         android:title="@string/settings_position_quickbar"
         app:iconSpaceReserved="false" />
+    <ListPreference
+        android:defaultValue="@string/left"
+        android:entries="@array/settings_values_align"
+        android:entryValues="@array/settings_values_align"
+        android:key="showIconChooseSide"
+        android:title="@string/settings_side_show_icon"
+        app:iconSpaceReserved="false" />
+    <ListPreference
+        android:defaultValue="@string/center"
+        android:entries="@array/settings_values_position"
+        android:entryValues="@array/settings_values_position"
+        android:key="showIconChoosePosition"
+        android:title="@string/settings_position_show_icon"
+        app:iconSpaceReserved="false" />
     <Preference
         android:key="chooseApps"
         android:title="Select Apps ..."
@@ -84,4 +98,9 @@
         app:min="1"
         app:defaultValue="10"
         app:iconSpaceReserved="false" />
+<!--    <SeekBarPreference-->
+<!--        android:key="quickbarBackgroundOpacity"-->
+<!--        android:title="Adjust quickbar background opacity"-->
+<!--        app:defaultValue="100"-->
+<!--        app:iconSpaceReserved="false" />-->
 </androidx.preference.PreferenceScreen>
