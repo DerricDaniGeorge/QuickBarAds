@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SeekBarPreference;
 
 import com.derric.quickbar.ChooseAppsActivity;
 import com.derric.quickbar.R;
@@ -18,9 +19,14 @@ import java.util.ArrayList;
 public class SettingsMenu extends PreferenceFragmentCompat {
 
     private ArrayList<AppInfo> appInfos;
+    private boolean isSettingsChanged;
 
     public SettingsMenu(ArrayList<AppInfo> appInfos) {
         this.appInfos = appInfos;
+    }
+
+    public boolean isSettingsChanged(){
+        return this.isSettingsChanged;
     }
 
     @Override
@@ -37,14 +43,11 @@ public class SettingsMenu extends PreferenceFragmentCompat {
                 return true;
             }
         });
-        SharedPreferences.OnSharedPreferenceChangeListener settingsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                //If any settings got changed, then do below:
-            }
-        };
-    }
 
+//        SeekBarPreference barTransparencySeekBar = (SeekBarPreference) findPreference("quickbarTransparency");
+//        barTransparencySeekBar
+
+    }
 
 
 }

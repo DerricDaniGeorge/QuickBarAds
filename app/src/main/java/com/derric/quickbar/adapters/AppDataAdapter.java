@@ -25,10 +25,14 @@ import java.util.List;
 public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.MyViewHolder> {
     private final List<AppInfo> appInfos;
     private final Context context;
+    private boolean anyChange;
 
     public AppDataAdapter(List<AppInfo> appInfos, Context context) {
         this.appInfos = appInfos;
         this.context = context;
+    }
+    public boolean isAnyChange(){
+        return this.anyChange;
     }
 
 
@@ -89,6 +93,7 @@ public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.MyViewHo
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 appInfo.setSelected(isChecked);
+                anyChange = true;
 //                if(!isChecked){
 //                    selectAllApps = false;
 //                }
@@ -115,6 +120,7 @@ public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.MyViewHo
         }
 //        this.selectAllApps = true;
         //Notify recyclerview data set is changed, so that the changes will be reflected in the list
+        anyChange = true;
         notifyDataSetChanged();
     }
 
@@ -122,6 +128,7 @@ public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.MyViewHo
         for (AppInfo appInfo : appInfos) {
             appInfo.setSelected(false);
         }
+        anyChange = true;
 //        this.selectAllApps = true;
         //Notify recyclerview data set is changed, so that the changes will be reflected in the list
         notifyDataSetChanged();

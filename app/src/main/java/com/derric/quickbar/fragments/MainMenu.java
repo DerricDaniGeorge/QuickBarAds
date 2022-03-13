@@ -50,9 +50,14 @@ public class MainMenu extends Fragment {
     private String mParam1;
     private String mParam2;
     private ArrayList<AppInfo> appInfos;
+    private SettingsMenu settingsMenu;
 
     public MainMenu() {
         // Required empty public constructor
+    }
+
+    public SettingsMenu getSettingsMenu() {
+        return settingsMenu;
     }
 
     /**
@@ -77,7 +82,7 @@ public class MainMenu extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            appInfos = (ArrayList<AppInfo>)  getArguments().getSerializable("appInfos");
+            appInfos = (ArrayList<AppInfo>)  getArguments().getSerializable(AppConstants.APP_INFOS);
         }
     }
 
@@ -92,7 +97,8 @@ public class MainMenu extends Fragment {
         }));
         menuView.findViewById(R.id.settings_button).setOnClickListener(v -> {
             final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.container, new SettingsMenu(appInfos));
+            settingsMenu = new SettingsMenu(appInfos);
+            ft.replace(R.id.container, settingsMenu);
             ft.addToBackStack("settingsFragment");
             ft.commit();
         });

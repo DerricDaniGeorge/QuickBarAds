@@ -11,14 +11,18 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Build;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
@@ -69,19 +73,36 @@ public class QuickBarManager {
         public String quickbarChoosePosition;
         public Set<String> selectedApps;
         public boolean wasAllAppsSelected;
+        public int quickbarTransparency;
+        public int hideIconTransparency;
+        public int showIconTransparency;
+        public int appIconSize;
+        public int showIconSize;
+        public int hideIconSize;
+        public int hideQuickBarSeconds;
+        public String showIconChooseSide;
+        public String showIconChoosePosition;
+
     }
 
     public void addToWindow(View relativeLayout, QuickBarManager.Settings settings, ArrayList<AppInfo> appInfos) {
         QuickBar quickBar = new QuickBar(mContext, settings);
+        LinearLayout secondLinear = relativeLayout.findViewById(R.id.second_linear);
         mViews.add(relativeLayout);
         //New implementation starts -->
         ImageView hideArrow = relativeLayout.findViewById(R.id.hide_arrow);
+        //Set transparency for hide button
+        hideArrow.setAlpha(settings.hideIconTransparency / 100F);
+        int hideIconPixel = QuickBarUtils.dpToPx(settings.hideIconSize, mContext);
+        LinearLayout.LayoutParams hideIconSize = new LinearLayout.LayoutParams(hideIconPixel, hideIconPixel);
+        hideArrow.setLayoutParams(hideIconSize);
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        if (settings.quickbarChooseSide.equals(AppConstants.RIGHT)) {
+        if (settings.showIconChooseSide.equals(AppConstants.RIGHT)) {
             showIcon = (ImageView) inflater.inflate(R.layout.icon_layout_left, null, false);
         } else {
             showIcon = (ImageView) inflater.inflate(R.layout.icon_layout_right, null, false);
         }
+        showIcon.setAlpha(settings.showIconTransparency / 100F);
         Handler handler = new Handler();
         Runnable runnable = new Runnable() {
             @Override
@@ -94,16 +115,17 @@ public class QuickBarManager {
         };
         //Hide the show icon first and then only add to screen
         showIcon.setVisibility(View.GONE);
-        WindowManager.LayoutParams params = getLayoutParams(settings);
+        //Get layout params for showIcon
+        WindowManager.LayoutParams showIconParams = getLayoutParams(settings);
         //When show button is clicked, show the quickbar
         showIcon.setOnClickListener(vi -> {
             showIcon.setVisibility(View.GONE);
             relativeLayout.setVisibility(View.VISIBLE);
             handler.removeCallbacks(runnable);
-            handler.postDelayed(runnable, 10000);
+            handler.postDelayed(runnable, settings.hideQuickBarSeconds * 1000);
         });
         //Add the icon to the screen
-        mWindowManager.addView(showIcon, params);
+        mWindowManager.addView(showIcon, showIconParams);
         hideArrow.setOnClickListener(v -> {
             relativeLayout.setVisibility(View.GONE);
             showIcon.setVisibility(View.VISIBLE);
@@ -112,14 +134,15 @@ public class QuickBarManager {
         mViews.add(showIcon);
         LinearLayout thirdLinear = relativeLayout.findViewById(R.id.third_linear);
         if (settings.useTransparentBackground) {
-            relativeLayout.findViewById(R.id.second_linear).setBackgroundColor(Color.TRANSPARENT);
+            secondLinear.setBackgroundColor(Color.TRANSPARENT);
         }
+        secondLinear.setAlpha(settings.quickbarTransparency / 100F);
         System.out.println("Appinfos size:" + appInfos.size());
         getAllApps2(thirdLinear, settings, relativeLayout, appInfos);
         mWindowManager.addView(relativeLayout, quickBar.windowLayoutParams);
         //Hide quickbar after a delay
         handler.removeCallbacks(runnable);
-        handler.postDelayed(runnable, 10000);
+        handler.postDelayed(runnable, settings.hideQuickBarSeconds * 1000);
     }
 
     //Parameters for show icon
@@ -127,14 +150,10 @@ public class QuickBarManager {
     private WindowManager.LayoutParams getLayoutParams(QuickBarManager.Settings settings) {
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
         //Tells which side of the screen we need to show the show icon
-        if (settings.quickbarChooseSide.equals(AppConstants.RIGHT)) {
-            params.gravity = Gravity.RIGHT | Gravity.CENTER;
-        } else {
-            params.gravity = Gravity.LEFT | Gravity.CENTER;
-        }
-//        QuickBarUtils.setGravity(params,settings);
-        params.width = 60;
-        params.height = 60;
+        QuickBarUtils.setGravityShowIcon(params,settings);
+        int showIconPixels = QuickBarUtils.dpToPx(settings.showIconSize,mContext);
+        params.width = showIconPixels;
+        params.height = showIconPixels;
         params.type = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 ?
                 WindowManager.LayoutParams.TYPE_PRIORITY_PHONE : WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
@@ -173,7 +192,9 @@ public class QuickBarManager {
 //    }
 
     private void getAllApps2(LinearLayout innerLayout, QuickBarManager.Settings settings, View relativeLayout, ArrayList<AppInfo> appInfos) {
-        LinearLayout.LayoutParams iconSize = new LinearLayout.LayoutParams(110, 110);
+//        LinearLayout.LayoutParams iconSize = new LinearLayout.LayoutParams(110, 110);
+        int pixel = QuickBarUtils.dpToPx(settings.appIconSize, mContext);
+        LinearLayout.LayoutParams iconSize = new LinearLayout.LayoutParams(pixel, pixel);
         PackageManager packageManager = mContext.getPackageManager();
 //        List<AppInfo> appInfos = getAllInstalledApps(packageManager);
 
@@ -274,14 +295,16 @@ public class QuickBarManager {
     public static List<AppInfo> getAllInstalledApps(PackageManager packageManager, Context context) {
         List<AppInfo> appInfos = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            List<ApplicationInfo> appList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+//            List<ApplicationInfo> appList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+            List<ApplicationInfo> appList = packageManager.getInstalledApplications(0);
+
             for (ApplicationInfo applicationInfo : appList) {
+                String packageName = applicationInfo.packageName;
                 AppInfo appInfo = new AppInfo();
                 Drawable drawable = applicationInfo.loadIcon(packageManager);
                 //Convert image to bytes
                 byte[] bitmapData = getDrawableBytes(getBitMapFromDrawable(drawable));
-                String packageName = applicationInfo.packageName;
-//                System.out.println("Package name is: "+packageName);
+                System.out.println("Package name is: " + packageName);
                 appInfo.setPackageName(packageName);
                 if (packageName.contains(".")) {
                     appInfo.setIconPath(packageName.replaceAll("\\.", "") + ".png");
@@ -293,9 +316,34 @@ public class QuickBarManager {
                 saveAppIcon(context, appInfo, bitmapData);
                 appInfo.setAppName(packageManager.getApplicationLabel(applicationInfo).toString());
                 appInfos.add(appInfo);
-//                Log.d("appNames", appInfo.getAppName());
             }
-            appInfos.addAll(getDialerApps(packageManager, context));
+//            Intent mainIntent = new Intent(Intent.ACTION_MAIN);
+//            mainIntent.addCategory(Intent.CATEGORY_HOME);
+//            List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(mainIntent, 0);
+//            for(ResolveInfo resolveInfo : resolveInfos) {
+//                String packageName = resolveInfo.activityInfo.packageName;
+//                AppInfo appInfo = new AppInfo();
+//                Drawable drawable = resolveInfo.loadIcon(packageManager);
+//                //Convert image to bytes
+//                byte[] bitmapData = getDrawableBytes(getBitMapFromDrawable(drawable));
+//                System.out.println("Package name is: "+packageName);
+//                appInfo.setPackageName(packageName);
+//                if (packageName.contains(".")) {
+//                    appInfo.setIconPath(packageName.replaceAll("\\.", "") + ".png");
+////                   System.out.println("getAllInstalledApps Inside if -->"+appInfo.getIconPath());
+//                } else {
+//                    appInfo.setIconPath(packageName + ".png");
+////                    System.out.println("getAllInstalledApps Inside else -->"+appInfo.getIconPath());
+//                }
+//                saveAppIcon(context, appInfo, bitmapData);
+//                appInfo.setAppName(packageManager.getApplicationLabel(resolveInfo.activityInfo.applicationInfo).toString());
+//            }
+            List<AppInfo> dialerApps = getDialerApps(packageManager, context);
+            for (AppInfo dialerApp : dialerApps) {
+                if (!appInfos.contains(dialerApp)) {
+                    appInfos.add(dialerApp);
+                }
+            }
 
         } else {
             List<PackageInfo> packs = packageManager.getInstalledPackages(0);
@@ -314,11 +362,15 @@ public class QuickBarManager {
 //                    System.out.println("getAllInstalledApps Inside else -->"+appInfo.getIconPath());
                 }
                 saveAppIcon(context, appInfo, bitmapData);
-                appInfos.add(appInfo);
                 appInfo.setAppName(packageManager.getApplicationLabel(packageInfo.applicationInfo).toString());
-//                Log.d("appNames", appInfo.getAppName());
+                appInfos.add(appInfo);
             }
-            appInfos.addAll(getDialerApps(packageManager, context));
+            List<AppInfo> dialerApps = getDialerApps(packageManager, context);
+            for (AppInfo dialerApp : dialerApps) {
+                if (!appInfos.contains(dialerApp)) {
+                    appInfos.add(dialerApp);
+                }
+            }
         }
         return appInfos;
     }
@@ -363,6 +415,7 @@ public class QuickBarManager {
             Drawable drawable = resolveInfo.loadIcon(packageManager);
             byte[] bitmapData = getDrawableBytes(getBitMapFromDrawable(drawable));
             String packageName = resolveInfo.activityInfo.packageName;
+            Log.d("Dialer app: ", packageName);
             appInfo.setPackageName(packageName);
             if (packageName.contains(".")) {
                 appInfo.setIconPath(packageName.replaceAll("\\.", "") + ".png");

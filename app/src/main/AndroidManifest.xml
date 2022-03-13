@@ -23,13 +23,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QuickBar">
         <activity
-            android:name=".ChooseAppsActivity"
+            android:name=".LoadingActivity"
             android:exported="true" >
-            <!-- below intent filter is required to start an activity from PreferenceScreen-->
-<!--            <intent-filter>-->
-<!--                <action android:name="your.action.string" />-->
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--            </intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ChooseAppsActivity"
+            android:exported="true">
+
+            <!-- below intent filter is required to start an activity from PreferenceScreen -->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="your.action.string" /> -->
+            <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+            <!-- </intent-filter> -->
         </activity>
 
         <service
@@ -41,10 +51,11 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
 
         <receiver
