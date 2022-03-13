@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/hide_icon_linear"
@@ -13,43 +14,23 @@
             android:id="@+id/hide_arrow"
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:contentDescription="@string/hide_bar"
             android:scaleX="-1"
-            android:layout_gravity="center_horizontal"
             android:src="@drawable/left_arrow" />
 
     </LinearLayout>
 
-
-    <LinearLayout
-        android:id="@+id/second_linear"
+    <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/hide_icon_linear"
-        android:background="#f2f2f2"
-        android:orientation="vertical">
+        android:background="#f2f2f2">
 
-        <!--        <ImageView-->
-        <!--            android:id="@+id/hide_arrow"-->
-        <!--            android:layout_width="25dp"-->
-        <!--            android:layout_height="25dp"-->
-        <!--            android:scaleX="-1"-->
-        <!--            android:src="@drawable/left_arrow" />-->
-
-        <ScrollView
+        <LinearLayout
+            android:id="@+id/third_linear"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/third_linear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </ScrollView>
-
-
-    </LinearLayout>
-
-
-
-</RelativeLayout>
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+</LinearLayout>
 

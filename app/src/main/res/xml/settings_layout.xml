@@ -55,6 +55,13 @@
         android:key="showIconChoosePosition"
         android:title="@string/settings_position_show_icon"
         app:iconSpaceReserved="false" />
+    <ListPreference
+        android:defaultValue="@string/center"
+        android:entries="@array/settings_values_position"
+        android:entryValues="@array/settings_values_position"
+        android:key="hideIconChoosePosition"
+        android:title="@string/settings_position_hide_icon"
+        app:iconSpaceReserved="false" />
     <Preference
         android:key="chooseApps"
         android:title="Select Apps ..."
@@ -62,6 +69,7 @@
     <SeekBarPreference
         android:key="quickbarTransparency"
         android:title="Adjust QuickBar opacity"
+        app:min="5"
         app:defaultValue="100"
         app:iconSpaceReserved="false" />
     <SeekBarPreference

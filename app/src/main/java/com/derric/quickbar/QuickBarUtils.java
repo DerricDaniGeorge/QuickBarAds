@@ -11,34 +11,34 @@ public class QuickBarUtils {
     public static void setGravity(WindowManager.LayoutParams layoutParams, QuickBarManager.Settings settings) {
         if (settings.quickbarChooseSide.equals(AppConstants.RIGHT) && settings.quickbarChoosePosition.equals(AppConstants.TOP)) {
             //Display the quickbar on top right of the screen
-            layoutParams.gravity = Gravity.RIGHT | Gravity.TOP;
+            layoutParams.gravity = Gravity.END | Gravity.TOP;
         } else if (settings.quickbarChooseSide.equals(AppConstants.RIGHT) && settings.quickbarChoosePosition.equals(AppConstants.CENTER)) {
-            layoutParams.gravity = Gravity.RIGHT | Gravity.CENTER;
+            layoutParams.gravity = Gravity.END | Gravity.CENTER;
         } else if (settings.quickbarChooseSide.equals(AppConstants.RIGHT) && settings.quickbarChoosePosition.equals(AppConstants.BOTTOM)) {
-            layoutParams.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+            layoutParams.gravity = Gravity.END | Gravity.BOTTOM;
         } else if (settings.quickbarChooseSide.equals(AppConstants.LEFT) && settings.quickbarChoosePosition.equals(AppConstants.TOP)) {
-            layoutParams.gravity = Gravity.LEFT | Gravity.TOP;
+            layoutParams.gravity = Gravity.START | Gravity.TOP;
         } else if (settings.quickbarChooseSide.equals(AppConstants.LEFT) && settings.quickbarChoosePosition.equals(AppConstants.CENTER)) {
-            layoutParams.gravity = Gravity.LEFT | Gravity.CENTER;
+            layoutParams.gravity = Gravity.START | Gravity.CENTER;
         } else if (settings.quickbarChooseSide.equals(AppConstants.LEFT) && settings.quickbarChoosePosition.equals(AppConstants.BOTTOM)) {
-            layoutParams.gravity = Gravity.LEFT | Gravity.BOTTOM;
+            layoutParams.gravity = Gravity.START | Gravity.BOTTOM;
         }
     }
 
     public static void setGravityShowIcon(WindowManager.LayoutParams layoutParams, QuickBarManager.Settings settings) {
         if (settings.showIconChooseSide.equals(AppConstants.RIGHT) && settings.showIconChoosePosition.equals(AppConstants.TOP)) {
             //Display the showicon on top right of the screen
-            layoutParams.gravity = Gravity.RIGHT | Gravity.TOP;
+            layoutParams.gravity = Gravity.END | Gravity.TOP;
         } else if (settings.showIconChooseSide.equals(AppConstants.RIGHT) && settings.showIconChoosePosition.equals(AppConstants.CENTER)) {
-            layoutParams.gravity = Gravity.RIGHT | Gravity.CENTER;
+            layoutParams.gravity = Gravity.END | Gravity.CENTER;
         } else if (settings.showIconChooseSide.equals(AppConstants.RIGHT) && settings.showIconChoosePosition.equals(AppConstants.BOTTOM)) {
-            layoutParams.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+            layoutParams.gravity = Gravity.END | Gravity.BOTTOM;
         } else if (settings.showIconChooseSide.equals(AppConstants.LEFT) && settings.showIconChoosePosition.equals(AppConstants.TOP)) {
-            layoutParams.gravity = Gravity.LEFT | Gravity.TOP;
+            layoutParams.gravity = Gravity.START | Gravity.TOP;
         } else if (settings.showIconChooseSide.equals(AppConstants.LEFT) && settings.showIconChoosePosition.equals(AppConstants.CENTER)) {
-            layoutParams.gravity = Gravity.LEFT | Gravity.CENTER;
+            layoutParams.gravity = Gravity.START | Gravity.CENTER;
         } else if (settings.showIconChooseSide.equals(AppConstants.LEFT) && settings.showIconChoosePosition.equals(AppConstants.BOTTOM)) {
-            layoutParams.gravity = Gravity.LEFT | Gravity.BOTTOM;
+            layoutParams.gravity = Gravity.START | Gravity.BOTTOM;
         }
     }
 

@@ -7,4 +7,5 @@
     <string name="bottom">Bottom</string>
     <string name="left">Left</string>
     <string name="right">Right</string>
+    <string name="hide_bar">Hide Bar</string>
 </resources>

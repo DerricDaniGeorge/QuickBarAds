@@ -29,9 +29,9 @@ public class QuickBar {
         //Setting these are very important and core part of this application and without these settings
         //application won't work at all.
         windowLayoutParams = new WindowManager.LayoutParams();
-        windowLayoutParams.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        windowLayoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT;
 //        windowLayoutParams.width = 300;
-        windowLayoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        windowLayoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         //TYPE_APPLICATION_OVERLAY -->Allows floating quickbar to get displayed over all other activities
         //except status bar on top or other critical views..
         windowLayoutParams.type = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 ?
