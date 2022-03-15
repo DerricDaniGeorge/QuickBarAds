@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <Preference
+        android:key="chooseApps"
+        android:title="Select Apps ..."
+        app:iconSpaceReserved="false"></Preference>
+    <PreferenceCategory>
     <SwitchPreferenceCompat
         android:key="transparentBar"
         android:singleLineTitle="false"
@@ -27,51 +32,51 @@
         android:singleLineTitle="false"
         android:title="Hide QuickBar logo"
         app:iconSpaceReserved="false" />
-    <ListPreference
-        android:defaultValue="@string/left"
-        android:entries="@array/settings_values_align"
-        android:entryValues="@array/settings_values_align"
-        android:key="chooseSide"
-        android:title="@string/settings_side_quickbar"
-        app:iconSpaceReserved="false" />
-    <ListPreference
-        android:defaultValue="@string/center"
-        android:entries="@array/settings_values_position"
-        android:entryValues="@array/settings_values_position"
-        android:key="choosePosition"
-        android:title="@string/settings_position_quickbar"
-        app:iconSpaceReserved="false" />
-    <ListPreference
-        android:defaultValue="@string/left"
-        android:entries="@array/settings_values_align"
-        android:entryValues="@array/settings_values_align"
-        android:key="showIconChooseSide"
-        android:title="@string/settings_side_show_icon"
-        app:iconSpaceReserved="false" />
-    <ListPreference
-        android:defaultValue="@string/center"
-        android:entries="@array/settings_values_position"
-        android:entryValues="@array/settings_values_position"
-        android:key="showIconChoosePosition"
-        android:title="@string/settings_position_show_icon"
-        app:iconSpaceReserved="false" />
-    <ListPreference
-        android:defaultValue="@string/center"
-        android:entries="@array/settings_values_position"
-        android:entryValues="@array/settings_values_position"
-        android:key="hideIconChoosePosition"
-        android:title="@string/settings_position_hide_icon"
-        app:iconSpaceReserved="false" />
-    <Preference
-        android:key="chooseApps"
-        android:title="Select Apps ..."
-        app:iconSpaceReserved="false"></Preference>
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <ListPreference
+            android:defaultValue="@string/left"
+            android:entries="@array/settings_values_align"
+            android:entryValues="@array/settings_values_align"
+            android:key="chooseSide"
+            android:title="@string/settings_side_quickbar"
+            app:iconSpaceReserved="false" />
+        <ListPreference
+            android:defaultValue="@string/center"
+            android:entries="@array/settings_values_position"
+            android:entryValues="@array/settings_values_position"
+            android:key="choosePosition"
+            android:title="@string/settings_position_quickbar"
+            app:iconSpaceReserved="false" />
+        <ListPreference
+            android:defaultValue="@string/left"
+            android:entries="@array/settings_values_align"
+            android:entryValues="@array/settings_values_align"
+            android:key="showIconChooseSide"
+            android:title="@string/settings_side_show_icon"
+            app:iconSpaceReserved="false" />
+        <ListPreference
+            android:defaultValue="@string/center"
+            android:entries="@array/settings_values_position"
+            android:entryValues="@array/settings_values_position"
+            android:key="showIconChoosePosition"
+            android:title="@string/settings_position_show_icon"
+            app:iconSpaceReserved="false" />
+        <ListPreference
+            android:defaultValue="@string/center"
+            android:entries="@array/settings_values_position"
+            android:entryValues="@array/settings_values_position"
+            android:key="hideIconChoosePosition"
+            android:title="@string/settings_position_hide_icon"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory>
     <SeekBarPreference
         android:key="quickbarTransparency"
         android:title="Adjust QuickBar opacity"
-        app:min="5"
         app:defaultValue="100"
-        app:iconSpaceReserved="false" />
+        app:iconSpaceReserved="false"
+        app:min="5" />
     <SeekBarPreference
         android:key="hideIconTransparency"
         android:title="Adjust Hide icon opacity"
@@ -85,30 +90,31 @@
     <SeekBarPreference
         android:key="appIconSize"
         android:title="Adjust app icon size"
-        app:min="5"
         app:defaultValue="40"
-        app:iconSpaceReserved="false" />
+        app:iconSpaceReserved="false"
+        app:min="5" />
     <SeekBarPreference
         android:key="showIconSize"
         android:title="Adjust show icon size"
-        app:min="5"
         app:defaultValue="15"
-        app:iconSpaceReserved="false" />
+        app:iconSpaceReserved="false"
+        app:min="5" />
     <SeekBarPreference
         android:key="hideIconSize"
         android:title="Adjust hide icon size"
-        app:min="5"
         app:defaultValue="15"
-        app:iconSpaceReserved="false" />
+        app:iconSpaceReserved="false"
+        app:min="5" />
     <SeekBarPreference
         android:key="hideQuickBarSeconds"
         android:title="Hide QuickBar after: (in seconds)"
-        app:min="1"
         app:defaultValue="10"
-        app:iconSpaceReserved="false" />
-<!--    <SeekBarPreference-->
-<!--        android:key="quickbarBackgroundOpacity"-->
-<!--        android:title="Adjust quickbar background opacity"-->
-<!--        app:defaultValue="100"-->
-<!--        app:iconSpaceReserved="false" />-->
+        app:iconSpaceReserved="false"
+        app:min="1" />
+    </PreferenceCategory>
+    <!--    <SeekBarPreference-->
+    <!--        android:key="quickbarBackgroundOpacity"-->
+    <!--        android:title="Adjust quickbar background opacity"-->
+    <!--        app:defaultValue="100"-->
+    <!--        app:iconSpaceReserved="false" />-->
 </androidx.preference.PreferenceScreen>

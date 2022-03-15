@@ -15,8 +15,8 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:contentDescription="@string/hide_bar"
-            android:scaleX="-1"
-            android:src="@drawable/left_arrow" />
+            android:rotation="270"
+            android:src="@drawable/love" />
 
     </LinearLayout>
 
