@@ -11,6 +11,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
@@ -20,6 +21,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -54,7 +56,7 @@ public class QuickBarManager {
     //Stores each Views added to the screen
     private final List<View> mViews;
     //Stores showIcon
-    private ImageView showIcon;
+    private LinearLayout showIcon;
 
     public QuickBarManager(Context context) {
         this.mContext = context;
@@ -109,9 +111,9 @@ public class QuickBarManager {
         hideArrow.setLayoutParams(hideIconSize);
         LayoutInflater inflater = LayoutInflater.from(mContext);
         if (settings.showIconChooseSide.equals(AppConstants.RIGHT)) {
-            showIcon = (ImageView) inflater.inflate(R.layout.icon_layout_left, null, false);
+            showIcon = (LinearLayout) inflater.inflate(R.layout.icon_layout_left, null, false);
         } else {
-            showIcon = (ImageView) inflater.inflate(R.layout.icon_layout_right, null, false);
+            showIcon = (LinearLayout) inflater.inflate(R.layout.icon_layout_right, null, false);
         }
         showIcon.setAlpha(settings.showIconTransparency / 100F);
         Handler handler = new Handler();
@@ -176,6 +178,8 @@ public class QuickBarManager {
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
+        //This translucent is very important, otherwise background color will be added to the image
+        params.format = PixelFormat.TRANSLUCENT;
         return params;
     }
 
