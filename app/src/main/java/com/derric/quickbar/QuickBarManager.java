@@ -7,22 +7,22 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
@@ -82,15 +82,26 @@ public class QuickBarManager {
         public int hideQuickBarSeconds;
         public String showIconChooseSide;
         public String showIconChoosePosition;
-
+        public String hideIconChoosePosition;
+        public int quickBarColor;
     }
 
-    public void addToWindow(View relativeLayout, QuickBarManager.Settings settings, ArrayList<AppInfo> appInfos) {
+    public void addToWindow(View linearLayout, QuickBarManager.Settings settings, ArrayList<AppInfo> appInfos) {
         QuickBar quickBar = new QuickBar(mContext, settings);
-        LinearLayout secondLinear = relativeLayout.findViewById(R.id.second_linear);
-        mViews.add(relativeLayout);
+        ScrollView scrollView = linearLayout.findViewById(R.id.scroll_view);
+        mViews.add(linearLayout);
+        LinearLayout hideIconLinear = linearLayout.findViewById(R.id.hide_icon_linear);
+        LinearLayout.LayoutParams hideIconParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        if (settings.hideIconChoosePosition.equals(AppConstants.TOP)) {
+            hideIconParams.gravity = Gravity.TOP;
+        } else if (settings.hideIconChoosePosition.equals(AppConstants.CENTER)) {
+            hideIconParams.gravity = Gravity.CENTER;
+        } else {
+            hideIconParams.gravity = Gravity.BOTTOM;
+        }
+        hideIconLinear.setLayoutParams(hideIconParams);
         //New implementation starts -->
-        ImageView hideArrow = relativeLayout.findViewById(R.id.hide_arrow);
+        ImageView hideArrow = linearLayout.findViewById(R.id.hide_arrow);
         //Set transparency for hide button
         hideArrow.setAlpha(settings.hideIconTransparency / 100F);
         int hideIconPixel = QuickBarUtils.dpToPx(settings.hideIconSize, mContext);
@@ -107,7 +118,7 @@ public class QuickBarManager {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                relativeLayout.setVisibility(View.GONE);
+                linearLayout.setVisibility(View.GONE);
                 if (showIcon != null) {
                     showIcon.setVisibility(View.VISIBLE);
                 }
@@ -120,26 +131,30 @@ public class QuickBarManager {
         //When show button is clicked, show the quickbar
         showIcon.setOnClickListener(vi -> {
             showIcon.setVisibility(View.GONE);
-            relativeLayout.setVisibility(View.VISIBLE);
+            linearLayout.setVisibility(View.VISIBLE);
             handler.removeCallbacks(runnable);
             handler.postDelayed(runnable, settings.hideQuickBarSeconds * 1000);
         });
         //Add the icon to the screen
         mWindowManager.addView(showIcon, showIconParams);
         hideArrow.setOnClickListener(v -> {
-            relativeLayout.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.GONE);
             showIcon.setVisibility(View.VISIBLE);
         });
         // Add the show arrow to the list, so that we can remove it from screen when the service is stopped
         mViews.add(showIcon);
-        LinearLayout thirdLinear = relativeLayout.findViewById(R.id.third_linear);
+        LinearLayout thirdLinear = linearLayout.findViewById(R.id.third_linear);
         if (settings.useTransparentBackground) {
-            secondLinear.setBackgroundColor(Color.TRANSPARENT);
+            scrollView.setBackgroundColor(Color.TRANSPARENT);
+        }else{
+            scrollView.setBackground(mContext.getResources().getDrawable(R.drawable.rounded_bg));
+            GradientDrawable background = (GradientDrawable) scrollView.getBackground();
+            background.setColor(mContext.getResources().getColor(settings.quickBarColor));
         }
-        secondLinear.setAlpha(settings.quickbarTransparency / 100F);
+        scrollView.setAlpha(settings.quickbarTransparency / 100F);
         System.out.println("Appinfos size:" + appInfos.size());
-        getAllApps2(thirdLinear, settings, relativeLayout, appInfos);
-        mWindowManager.addView(relativeLayout, quickBar.windowLayoutParams);
+        getAllApps2(thirdLinear, settings, linearLayout, appInfos);
+        mWindowManager.addView(linearLayout, quickBar.windowLayoutParams);
         //Hide quickbar after a delay
         handler.removeCallbacks(runnable);
         handler.postDelayed(runnable, settings.hideQuickBarSeconds * 1000);
@@ -150,8 +165,8 @@ public class QuickBarManager {
     private WindowManager.LayoutParams getLayoutParams(QuickBarManager.Settings settings) {
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
         //Tells which side of the screen we need to show the show icon
-        QuickBarUtils.setGravityShowIcon(params,settings);
-        int showIconPixels = QuickBarUtils.dpToPx(settings.showIconSize,mContext);
+        QuickBarUtils.setGravityShowIcon(params, settings);
+        int showIconPixels = QuickBarUtils.dpToPx(settings.showIconSize, mContext);
         params.width = showIconPixels;
         params.height = showIconPixels;
         params.type = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 ?
@@ -195,6 +210,7 @@ public class QuickBarManager {
 //        LinearLayout.LayoutParams iconSize = new LinearLayout.LayoutParams(110, 110);
         int pixel = QuickBarUtils.dpToPx(settings.appIconSize, mContext);
         LinearLayout.LayoutParams iconSize = new LinearLayout.LayoutParams(pixel, pixel);
+        iconSize.setMargins(0,5,0,5);
         PackageManager packageManager = mContext.getPackageManager();
 //        List<AppInfo> appInfos = getAllInstalledApps(packageManager);
 

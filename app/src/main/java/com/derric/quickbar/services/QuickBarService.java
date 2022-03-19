@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.RequiresApi;
@@ -58,18 +59,18 @@ public class QuickBarService extends Service {
         //Load user settings
         QuickBarManager.Settings userSettings = loadUserSettings(this);
         LayoutInflater inflater = LayoutInflater.from(this);
-        RelativeLayout relativeLayout;
+        LinearLayout linearLayout;
         if (userSettings.quickbarChooseSide.equals(AppConstants.RIGHT)) {
-            relativeLayout = (RelativeLayout) inflater.inflate(R.layout.layout_quickbar_right, null, false);
+            linearLayout = (LinearLayout) inflater.inflate(R.layout.layout_quickbar_right, null, false);
         } else {
-            relativeLayout = (RelativeLayout) inflater.inflate(R.layout.layout_quickbar_left, null, false);
+            linearLayout = (LinearLayout) inflater.inflate(R.layout.layout_quickbar_left, null, false);
         }
 
         mQuickBarManager = new QuickBarManager(this);
         ArrayList<AppInfo> appInfos = (ArrayList<AppInfo>) intent.getSerializableExtra("appInfos");
         System.out.println("Appinfo size in service:" + appInfos.size());
         //Add the quickbar to screen
-        mQuickBarManager.addToWindow(relativeLayout, userSettings, appInfos);
+        mQuickBarManager.addToWindow(linearLayout, userSettings, appInfos);
         //Android OS Oreo or above requires Notificaition channel needs to be created to start
         //foreground service
 
@@ -148,12 +149,14 @@ public class QuickBarService extends Service {
         settings.quickbarTransparency = preferences.getInt("quickbarTransparency", 100);
         settings.hideIconTransparency = preferences.getInt("hideIconTransparency", 100);
         settings.showIconTransparency = preferences.getInt("showIconTransparency", 100);
-        settings.appIconSize = preferences.getInt("appIconSize",40);
-        settings.showIconSize = preferences.getInt("showIconSize",10);
-        settings.hideIconSize = preferences.getInt("hideIconSize",10);
-        settings.hideQuickBarSeconds = preferences.getInt("hideQuickBarSeconds",10);
-        settings.showIconChooseSide = preferences.getString("showIconChooseSide",AppConstants.LEFT);
-        settings.showIconChoosePosition = preferences.getString("showIconChoosePosition",AppConstants.CENTER);
+        settings.appIconSize = preferences.getInt("appIconSize", 40);
+        settings.showIconSize = preferences.getInt("showIconSize", 10);
+        settings.hideIconSize = preferences.getInt("hideIconSize", 10);
+        settings.hideQuickBarSeconds = preferences.getInt("hideQuickBarSeconds", 10);
+        settings.showIconChooseSide = preferences.getString("showIconChooseSide", AppConstants.LEFT);
+        settings.showIconChoosePosition = preferences.getString("showIconChoosePosition", AppConstants.CENTER);
+        settings.hideIconChoosePosition = preferences.getString("hideIconChoosePosition", AppConstants.CENTER);
+        settings.quickBarColor = preferences.getInt("quickBarColor", R.color.grey_white);
         return settings;
     }
 }

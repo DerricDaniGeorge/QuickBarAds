@@ -3,5 +3,5 @@
     android:id="@+id/left_arrow"
     android:layout_width="10dp"
     android:layout_height="10dp"
-    android:scaleX="-1"
-    android:src="@drawable/left_arrow" />
+    android:rotation="270"
+    android:src="@drawable/love" />

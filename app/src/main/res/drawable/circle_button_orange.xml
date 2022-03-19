@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Order is very important here  state_selected=true must come first-->
+    <item android:state_selected="true">
+        <shape android:shape="oval">
+            <solid android:color="@color/orange" />
+            <stroke android:width="2dp" android:color="@color/black" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/orange" />
+        </shape>
+    </item>
+
+</selector>
+
+    <!--<shape xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--    android:shape="oval">-->
+    <!--    <solid android:color="@color/orange"/>-->
+    <!--</shape>-->

@@ -15,4 +15,5 @@
 
     <string name="settings_side_show_icon">Choose show icon side</string>
     <string name="settings_position_show_icon">Choose show icon position</string>
+    <string name="settings_position_hide_icon">Choose hide icon position</string>
 </resources>
