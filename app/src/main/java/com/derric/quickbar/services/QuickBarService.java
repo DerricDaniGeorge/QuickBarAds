@@ -149,13 +149,14 @@ public class QuickBarService extends Service {
         settings.quickbarTransparency = preferences.getInt("quickbarTransparency", 100);
         settings.hideIconTransparency = preferences.getInt("hideIconTransparency", 100);
         settings.showIconTransparency = preferences.getInt("showIconTransparency", 100);
-        settings.appIconSize = preferences.getInt("appIconSize",40);
-        settings.showIconSize = preferences.getInt("showIconSize",10);
-        settings.hideIconSize = preferences.getInt("hideIconSize",10);
-        settings.hideQuickBarSeconds = preferences.getInt("hideQuickBarSeconds",10);
-        settings.showIconChooseSide = preferences.getString("showIconChooseSide",AppConstants.LEFT);
-        settings.showIconChoosePosition = preferences.getString("showIconChoosePosition",AppConstants.CENTER);
-        settings.hideIconChoosePosition = preferences.getString("hideIconChoosePosition",AppConstants.CENTER);
+        settings.appIconSize = preferences.getInt("appIconSize", 40);
+        settings.showIconSize = preferences.getInt("showIconSize", 10);
+        settings.hideIconSize = preferences.getInt("hideIconSize", 10);
+        settings.hideQuickBarSeconds = preferences.getInt("hideQuickBarSeconds", 10);
+        settings.showIconChooseSide = preferences.getString("showIconChooseSide", AppConstants.LEFT);
+        settings.showIconChoosePosition = preferences.getString("showIconChoosePosition", AppConstants.CENTER);
+        settings.hideIconChoosePosition = preferences.getString("hideIconChoosePosition", AppConstants.CENTER);
+        settings.quickBarColor = preferences.getInt("quickBarColor", R.color.grey_white);
         return settings;
     }
 }

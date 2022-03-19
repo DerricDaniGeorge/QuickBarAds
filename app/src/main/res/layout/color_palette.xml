@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/color_palette_layout"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:paddingStart="17dp"
+    android:paddingEnd="5dp"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:text="Quickbar theme:"/>
+
+    <ImageButton
+        android:id="@+id/pink"
+        android:layout_margin="3dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/circle_button_pink">
+    </ImageButton>
+    <ImageButton
+        android:layout_margin="3dp"
+        android:layout_toLeftOf="@+id/pink"
+        android:id="@+id/blue"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/circle_button_blue">
+    </ImageButton>
+    <ImageButton
+        android:layout_margin="3dp"
+        android:layout_toLeftOf="@+id/blue"
+        android:id="@+id/orange"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/circle_button_orange">
+    </ImageButton>
+    <ImageButton
+        android:layout_margin="3dp"
+        android:layout_toLeftOf="@+id/orange"
+        android:id="@+id/grey_white"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/circle_button_white">
+    </ImageButton>
+
+    <ImageButton
+        android:layout_margin="3dp"
+        android:layout_toLeftOf="@+id/grey_white"
+        android:id="@+id/lightRed"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/circle_button_light_red">
+    </ImageButton>
+    <ImageButton
+        android:layout_margin="3dp"
+        android:layout_toLeftOf="@+id/lightRed"
+        android:id="@+id/blueish_black"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/circle_button_black">
+    </ImageButton>
+</RelativeLayout>

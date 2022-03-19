@@ -7,10 +7,12 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
@@ -81,7 +83,7 @@ public class QuickBarManager {
         public String showIconChooseSide;
         public String showIconChoosePosition;
         public String hideIconChoosePosition;
-
+        public int quickBarColor;
     }
 
     public void addToWindow(View linearLayout, QuickBarManager.Settings settings, ArrayList<AppInfo> appInfos) {
@@ -144,6 +146,10 @@ public class QuickBarManager {
         LinearLayout thirdLinear = linearLayout.findViewById(R.id.third_linear);
         if (settings.useTransparentBackground) {
             scrollView.setBackgroundColor(Color.TRANSPARENT);
+        }else{
+            scrollView.setBackground(mContext.getResources().getDrawable(R.drawable.rounded_bg));
+            GradientDrawable background = (GradientDrawable) scrollView.getBackground();
+            background.setColor(mContext.getResources().getColor(settings.quickBarColor));
         }
         scrollView.setAlpha(settings.quickbarTransparency / 100F);
         System.out.println("Appinfos size:" + appInfos.size());
@@ -204,6 +210,7 @@ public class QuickBarManager {
 //        LinearLayout.LayoutParams iconSize = new LinearLayout.LayoutParams(110, 110);
         int pixel = QuickBarUtils.dpToPx(settings.appIconSize, mContext);
         LinearLayout.LayoutParams iconSize = new LinearLayout.LayoutParams(pixel, pixel);
+        iconSize.setMargins(0,5,0,5);
         PackageManager packageManager = mContext.getPackageManager();
 //        List<AppInfo> appInfos = getAllInstalledApps(packageManager);
 
