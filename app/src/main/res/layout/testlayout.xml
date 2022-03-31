@@ -15,7 +15,7 @@
             android:id="@+id/hd"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/left_arrow" />
+            android:src="@drawable/love" />
 
     </LinearLayout>
     <ScrollView

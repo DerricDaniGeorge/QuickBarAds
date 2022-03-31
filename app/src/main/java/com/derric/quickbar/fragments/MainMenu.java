@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.derric.quickbar.QuickBarManager;
+import com.derric.quickbar.QuickBarUtils;
 import com.derric.quickbar.R;
 import com.derric.quickbar.constants.AppConstants;
 import com.derric.quickbar.models.AppInfo;

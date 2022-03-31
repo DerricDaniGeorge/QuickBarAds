@@ -17,6 +17,7 @@ public class AppInfo implements Serializable {
     //Icon path in device storage
     private String iconPath;
     private boolean selected;
+    private int position;
 
     @Override
     public  boolean equals (Object object){

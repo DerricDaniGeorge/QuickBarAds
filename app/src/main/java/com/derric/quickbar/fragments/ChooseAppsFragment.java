@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,16 +15,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.derric.quickbar.QuickBarManager;
+import com.derric.quickbar.QuickBarUtils;
 import com.derric.quickbar.R;
-import com.derric.quickbar.adapters.AppDataAdapter;
-import com.derric.quickbar.adapters.ChooseAppAdapter;
+import com.derric.quickbar.adapters.ChooseAppsAdapter;
 import com.derric.quickbar.models.AppInfo;
 
 import java.util.ArrayList;
@@ -39,19 +33,20 @@ import java.util.Set;
 public class ChooseAppsFragment extends Fragment {
     //    private static final String APP_INFOS = "app_infos";
     private ArrayList<AppInfo> appInfos;
-    private AppDataAdapter adapter;
+    private ChooseAppsAdapter adapter;
     private boolean isAllAppsSelected;
 
     public ChooseAppsFragment(ArrayList<AppInfo> appInfos) {
-        // Required empty public constructor
         this.appInfos = appInfos;
+
+        QuickBarUtils.sortAppsByName(appInfos);
     }
 
     public boolean getAllAppsSelected() {
         return this.isAllAppsSelected;
     }
 
-    public AppDataAdapter getAdapter() {
+    public ChooseAppsAdapter getAdapter() {
         return this.adapter;
     }
 
@@ -80,28 +75,34 @@ public class ChooseAppsFragment extends Fragment {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_choose_apps, container, false);
         RecyclerView recyclerView = layout.findViewById(R.id.recycler_view);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 2);
+//        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 2);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         recyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration divider =  new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(divider);
         PackageManager packageManager = getContext().getPackageManager();
 //        List<AppInfo> appInfos = QuickBarManager.getAllInstalledApps(packageManager,getContext());
-        List<AppInfo> appsWithActivity = new ArrayList<>();
-        for (AppInfo appInfo : appInfos) {
-            Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(appInfo.getPackageName());
-            if (mainActivityIntent != null) {
-                appsWithActivity.add(appInfo);
-            }
-        }
+//        List<AppInfo> appsWithActivity = new ArrayList<>();
+//        for (AppInfo appInfo : appInfos) {
+//            Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(appInfo.getPackageName());
+//            if (mainActivityIntent != null) {
+//                appsWithActivity.add(appInfo);
+//            }
+//        }
         //If user selected apps are there, then when showing the list, mark those selected apps checked
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         Set<String> selectedApps = preferences.getStringSet("selectedApps", null);
         if (selectedApps != null) {
-            for (AppInfo appInfo : appsWithActivity) {
-                if (selectedApps.contains(appInfo.getPackageName())) {
+            for (AppInfo appInfo : appInfos) {
+                String[] split = appInfo.getPackageName().split(":");
+                if (selectedApps.contains(split[0])) {
                     appInfo.setSelected(true);
                 }
             }
+        }else{
+//            System.out.println("SelectedApps is nulllllllllllllllllll");
         }
-        adapter = new AppDataAdapter(appsWithActivity, getContext());
+        adapter = new ChooseAppsAdapter(appInfos, getContext());
         recyclerView.setAdapter(adapter);
 //        PackageManager packageManager = getContext().getPackageManager();
 //        GridLayout grid = layout.findViewById(R.id.app_chooser_gridlayout);

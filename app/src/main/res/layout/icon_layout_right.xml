@@ -7,6 +7,7 @@
         android:id="@+id/left_arrow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="show icon"
         android:rotation="270"
         android:src="@drawable/love" />
 </LinearLayout>

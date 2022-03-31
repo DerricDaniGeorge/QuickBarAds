@@ -8,4 +8,6 @@
     <string name="left">Left</string>
     <string name="right">Right</string>
     <string name="hide_bar">Hide Bar</string>
+    <string name="app_icon">App icon</string>
+    <string name="dragHandle">Drag Handle</string>
 </resources>

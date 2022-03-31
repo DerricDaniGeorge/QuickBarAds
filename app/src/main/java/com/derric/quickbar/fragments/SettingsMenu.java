@@ -10,9 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 import androidx.preference.SeekBarPreference;
 
 import com.derric.quickbar.ChooseAppsActivity;
+import com.derric.quickbar.OrderAppsActivity;
+import com.derric.quickbar.QuickBarUtils;
 import com.derric.quickbar.R;
 import com.derric.quickbar.constants.AppConstants;
 import com.derric.quickbar.models.AppInfo;
@@ -28,7 +31,7 @@ public class SettingsMenu extends PreferenceFragmentCompat {
         this.appInfos = appInfos;
     }
 
-    public boolean isSettingsChanged(){
+    public boolean isSettingsChanged() {
         return this.isSettingsChanged;
     }
 
@@ -43,6 +46,20 @@ public class SettingsMenu extends PreferenceFragmentCompat {
                 Intent chooseAppsIntent = new Intent(getActivity(), ChooseAppsActivity.class);
                 chooseAppsIntent.putExtra(AppConstants.APP_INFOS, appInfos);
                 startActivity(chooseAppsIntent);
+                return true;
+            }
+        });
+
+        Preference orderApps = findPreference("orderApps");
+        orderApps.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent orderAppsIntent = new Intent(getActivity(), OrderAppsActivity.class);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                //Show only user selected Apps here
+                ArrayList<AppInfo> userSelectedApps = QuickBarUtils.getUserSelectedApps(preferences.getStringSet("selectedApps", null), appInfos);
+                orderAppsIntent.putExtra(AppConstants.APP_INFOS, userSelectedApps);
+                startActivity(orderAppsIntent);
                 return true;
             }
         });

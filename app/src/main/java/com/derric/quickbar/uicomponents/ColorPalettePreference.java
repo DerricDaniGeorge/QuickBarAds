@@ -58,6 +58,12 @@ public class ColorPalettePreference extends Preference {
             case R.color.blueish_black:
                 colorPaletteLayout.findViewById(R.id.blueish_black).setSelected(true);
                 break;
+            case R.color.google_sheet_green:
+                colorPaletteLayout.findViewById(R.id.google_sheet_green).setSelected(true);
+                break;
+            case R.color.google_slides_yellow:
+                colorPaletteLayout.findViewById(R.id.google_slides_yellow).setSelected(true);
+                break;
         }
         SharedPreferences.Editor editor = preferences.edit();
         List<ImageButton> colors = new ArrayList<>();
@@ -100,6 +106,12 @@ public class ColorPalettePreference extends Preference {
                             break;
                         case R.id.blueish_black:
                             editor.putInt("quickBarColor", R.color.blueish_black);
+                            break;
+                        case R.id.google_sheet_green:
+                            editor.putInt("quickBarColor", R.color.google_sheet_green);
+                            break;
+                        case R.id.google_slides_yellow:
+                            editor.putInt("quickBarColor", R.color.google_slides_yellow);
                             break;
                     }
                     editor.commit();
