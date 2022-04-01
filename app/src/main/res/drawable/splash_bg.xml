@@ -5,7 +5,4 @@
         <bitmap
             android:src="@drawable/quickbar_splash2"/>
     </item>
-    <item android:bottom="50dp">
-        <bitmap android:gravity="bottom" android:src="@drawable/quickbar_text_logo"/>
-    </item>
 </layer-list>

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.derric.quickbar.QuickBarUtils;
 import com.derric.quickbar.R;
 import com.derric.quickbar.adapters.ChooseAppsAdapter;
 import com.derric.quickbar.adapters.OrderAppsAdapter;
@@ -67,11 +68,11 @@ public class OrderAppsFragment extends Fragment implements DragListener {
         recyclerView.addItemDecoration(divider);
         adapter = new OrderAppsAdapter(userSelectedApps, getContext(),this);
 //        for(AppInfo a: userSelectedApps){
-//            System.out.println("userselectdApp ->"+a.getPackageName());
+//            System.out.println("userselectdApp ------>"+a.getPackageName()+"position: "+a.getPosition());
 //        }
-        if(userSelectedApps.isEmpty()){
-//            System.out.println("I am empty");
-        }
+//        if(userSelectedApps.isEmpty()){
+//            System.out.println("I am empty===========================");
+//        }
         recyclerView.setAdapter(adapter);
 
 

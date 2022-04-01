@@ -34,7 +34,7 @@ public class ChooseAppsFragment extends Fragment {
     //    private static final String APP_INFOS = "app_infos";
     private ArrayList<AppInfo> appInfos;
     private ChooseAppsAdapter adapter;
-    private boolean isAllAppsSelected;
+//    private boolean isAllAppsSelected;
 
     public ChooseAppsFragment(ArrayList<AppInfo> appInfos) {
         this.appInfos = appInfos;
@@ -42,9 +42,9 @@ public class ChooseAppsFragment extends Fragment {
         QuickBarUtils.sortAppsByName(appInfos);
     }
 
-    public boolean getAllAppsSelected() {
-        return this.isAllAppsSelected;
-    }
+//    public boolean getAllAppsSelected() {
+//        return this.isAllAppsSelected;
+//    }
 
     public ChooseAppsAdapter getAdapter() {
         return this.adapter;
@@ -145,12 +145,12 @@ public class ChooseAppsFragment extends Fragment {
             case R.id.selectAll:
                 //Select all checkboxes in the recyclerview
                 this.adapter.selectAllItems();
-                this.isAllAppsSelected = true;
+//                this.isAllAppsSelected = true;
                 return true;
 
             case R.id.deselectAll:
                 this.adapter.deselectAllItems();
-                this.isAllAppsSelected = false;
+//                this.isAllAppsSelected = false;
                 return true;
         }
         return false;

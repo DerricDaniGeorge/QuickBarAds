@@ -87,8 +87,8 @@ public class ChooseAppsActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        saveSelectedApps();
         super.onDestroy();
+        saveSelectedApps();
     }
 
     private void saveSelectedApps() {
@@ -104,13 +104,19 @@ public class ChooseAppsActivity extends AppCompatActivity {
                 selectedApps.add(appInfo.getPackageName());
             }
         }
-        if (chooseAppsFragment.getAllAppsSelected()) {
-            editor.putBoolean("wasAllAppsSelected", true);
-        } else {
-            editor.putBoolean("wasAllAppsSelected", false);
-        }
+//        if (chooseAppsFragment.getAllAppsSelected()) {
+//            editor.putBoolean("wasAllAppsSelected", true);
+//        } else {
+//            editor.putBoolean("wasAllAppsSelected", false);
+//        }
         editor.putStringSet("selectedApps", selectedApps);
         editor.commit();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        saveSelectedApps();
     }
 
 }

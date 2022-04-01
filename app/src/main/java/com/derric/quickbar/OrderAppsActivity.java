@@ -38,10 +38,10 @@ public class OrderAppsActivity extends AppCompatActivity {
     //When the back button / back event occurred
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         saveAppsOrder();
 //        System.out.println("Selected apps are: "+selectedApps);
         Toast.makeText(this,"Please stop and re-launch quickbar if there is any changes",Toast.LENGTH_SHORT).show();
-        super.onBackPressed();
     }
 
     private void saveAppsOrder() {
@@ -52,6 +52,7 @@ public class OrderAppsActivity extends AppCompatActivity {
         for (AppInfo appInfo : userSelectedApps) {
             appInfo.setPosition(count++);
             selectedApps.add(appInfo.getPackageName()+":"+count);
+//            System.out.println("Saving app____________: "+appInfo.getAppName()+" count::::"+count);
         }
         editor.putStringSet("selectedApps", selectedApps);
         editor.commit();
@@ -61,5 +62,11 @@ public class OrderAppsActivity extends AppCompatActivity {
     public void onDestroy(){
         saveAppsOrder();
         super.onDestroy();
+    }
+
+    @Override
+    public void onPause(){
+        saveAppsOrder();
+        super.onPause();
     }
 }

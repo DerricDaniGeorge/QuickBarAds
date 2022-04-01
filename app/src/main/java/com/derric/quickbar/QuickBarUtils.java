@@ -70,6 +70,7 @@ public class QuickBarUtils {
                 }
             }
         }
+//        System.out.println("User selected apps called.............");
         sortAppsByPosition(selectedApps);
         return selectedApps;
     }

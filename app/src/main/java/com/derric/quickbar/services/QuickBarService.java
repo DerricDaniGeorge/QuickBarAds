@@ -106,7 +106,7 @@ public class QuickBarService extends Service {
         builder.setWhen(System.currentTimeMillis());
         builder.setSmallIcon(R.drawable.quickbar_logo1_rounded);
         builder.setContentTitle("QuickBar: Active");
-        builder.setContentText("Press here to open settings");
+        builder.setContentText("QuickBar is running");
         //OnGoing notification cannot be dismissed by user.
         builder.setOngoing(true);
         builder.setPriority(NotificationCompat.PRIORITY_MIN);
@@ -135,7 +135,7 @@ public class QuickBarService extends Service {
 
     public QuickBarManager.Settings loadUserSettings(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-//        System.out.println("settings are -->" + preferences.getAll());
+//        System.out.println("settings are --===================>" + preferences.getAll());
         final QuickBarManager.Settings settings = new QuickBarManager.Settings();
         settings.useTransparentBackground = preferences.getBoolean("transparentBar", false);
         settings.showAppsInAscendingOrder = preferences.getBoolean("sortApps", false);
@@ -150,8 +150,8 @@ public class QuickBarService extends Service {
         settings.hideIconTransparency = preferences.getInt("hideIconTransparency", 100);
         settings.showIconTransparency = preferences.getInt("showIconTransparency", 100);
         settings.appIconSize = preferences.getInt("appIconSize", 40);
-        settings.showIconSize = preferences.getInt("showIconSize", 10);
-        settings.hideIconSize = preferences.getInt("hideIconSize", 10);
+        settings.showIconSize = preferences.getInt("showIconSize", 20);
+        settings.hideIconSize = preferences.getInt("hideIconSize", 20);
         settings.hideQuickBarSeconds = preferences.getInt("hideQuickBarSeconds", 10);
         settings.showIconChooseSide = preferences.getString("showIconChooseSide", AppConstants.LEFT);
         settings.showIconChoosePosition = preferences.getString("showIconChoosePosition", AppConstants.CENTER);

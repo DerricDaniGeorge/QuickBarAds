@@ -144,12 +144,12 @@ public class QuickBarManager {
         WindowManager.LayoutParams showIconParams = getLayoutParams(settings);
         //When show button is clicked, show the quickbar
         showIcon.setOnClickListener(vi -> {
-            if(settings.vibrateShowIconPressed){
+            if (settings.vibrateShowIconPressed) {
                 Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                 vibrator.vibrate(100);
             }
             showIcon.setVisibility(View.GONE);
-            Animation rotateAnimation = AnimationUtils.loadAnimation(mContext,R.anim.rotate_anim);
+            Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_anim);
             hideArrow.startAnimation(rotateAnimation);
             linearLayout.setVisibility(View.VISIBLE);
             handler.removeCallbacks(runnable);
@@ -158,13 +158,13 @@ public class QuickBarManager {
         //Add the icon to the screen
         mWindowManager.addView(showIcon, showIconParams);
         hideArrow.setOnClickListener(v -> {
-            if(settings.vibrateHideIconPressed){
+            if (settings.vibrateHideIconPressed) {
                 Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                 vibrator.vibrate(100);
             }
             linearLayout.setVisibility(View.GONE);
             showIcon.setVisibility(View.VISIBLE);
-            Animation rotateAnimation = AnimationUtils.loadAnimation(mContext,R.anim.rotate_anim);
+            Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_anim);
             showIcon.startAnimation(rotateAnimation);
         });
         // Add the show arrow to the list, so that we can remove it from screen when the service is stopped
@@ -172,7 +172,7 @@ public class QuickBarManager {
         LinearLayout thirdLinear = linearLayout.findViewById(R.id.third_linear);
         if (settings.useTransparentBackground) {
             scrollView.setBackgroundColor(Color.TRANSPARENT);
-        }else{
+        } else {
             scrollView.setBackground(mContext.getResources().getDrawable(R.drawable.rounded_bg));
             GradientDrawable background = (GradientDrawable) scrollView.getBackground();
             background.setColor(mContext.getResources().getColor(settings.quickBarColor));
@@ -239,69 +239,71 @@ public class QuickBarManager {
 //        LinearLayout.LayoutParams iconSize = new LinearLayout.LayoutParams(110, 110);
         int pixel = QuickBarUtils.dpToPx(settings.appIconSize, mContext);
         LinearLayout.LayoutParams iconSize = new LinearLayout.LayoutParams(pixel, pixel);
-        iconSize.setMargins(0,5,0,5);
+        iconSize.setMargins(0, 5, 0, 5);
         PackageManager packageManager = mContext.getPackageManager();
 //        List<AppInfo> appInfos = getAllInstalledApps(packageManager);
 
-        if (settings.wasAllAppsSelected) {
-//            System.out.println(" wasAllAppsseleted is true");
-            //Show all apps
+//        if (settings.wasAllAppsSelected) {
+////            System.out.println(" wasAllAppsseleted is true");
+//            //Show all apps
+//            QuickBarUtils.sortAppsByPosition(appInfos);
+//            if (settings.showAppsInAscendingOrder) {
+//                QuickBarUtils.sortAppsByName(appInfos);
+//            }
+//            showApps(innerLayout, settings, relativeLayout, appInfos, iconSize, packageManager);
+//        } else {
+        //Show only user selected apps
+        Set<String> userSelectedApps = settings.selectedApps;
+        // This null check is required, if this app is a fresh install and user didn't choose
+        //any apps yet
+        if (userSelectedApps != null) {
+            ArrayList<AppInfo> selectedApps = new ArrayList<>();
+            for (String packageName : userSelectedApps) {
+                String[] split = packageName.split(":");
+                for (AppInfo appInfo : appInfos) {
+                    if (appInfo.getPackageName().equals(split[0])) {
+                        if (split.length > 1) {
+                            appInfo.setPosition(Integer.parseInt(split[1]));
+                        }
+                        selectedApps.add(appInfo);
+                    }
+                }
+            }
+            QuickBarUtils.sortAppsByPosition(selectedApps);
             if (settings.showAppsInAscendingOrder) {
-                QuickBarUtils.sortAppsByName(appInfos);
+                QuickBarUtils.sortAppsByName(selectedApps);
             }
-            showApps(innerLayout, settings, relativeLayout, appInfos, iconSize, packageManager);
+            showApps(innerLayout, settings, relativeLayout, selectedApps, iconSize, packageManager);
         } else {
-            //Show only user selected apps
-            Set<String> userSelectedApps = settings.selectedApps;
-            // This null check is required, if this app is a fresh install and user didn't choose
-            //any apps yet
-            if (userSelectedApps != null) {
-                ArrayList<AppInfo> selectedApps = new ArrayList<>();
-                for (String packageName : userSelectedApps) {
-                    String[] split = packageName.split(":");
-                    for (AppInfo appInfo : appInfos) {
-                        if (appInfo.getPackageName().equals(split[0])) {
-                            if(split.length > 1){
-                                appInfo.setPosition(Integer.parseInt(split[1]));
-                            }
-                            selectedApps.add(appInfo);
-                        }
+            //There are no user selected apps, means user is using the app for first time
+            //show some random 5 apps
+            ArrayList<AppInfo> appsToShow = new ArrayList<>();
+            int count = 0;
+            for (AppInfo app : appInfos) {
+                if (count <= 5) {
+                    Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(app.getPackageName());
+                    if (mainActivityIntent != null) {
+                        appsToShow.add(app);
+                        app.setSelected(true);
+                        app.setPosition(count);
+                        count++;
                     }
                 }
-                QuickBarUtils.sortAppsByPosition(selectedApps);
-                if (settings.showAppsInAscendingOrder) {
-                    QuickBarUtils.sortAppsByName(selectedApps);
-                }
-                showApps(innerLayout, settings, relativeLayout, selectedApps, iconSize, packageManager);
-            } else {
-                //There are no user selected apps, means user is using the app for first time
-                //show some random 5 apps
-                ArrayList<AppInfo> appsToShow = new ArrayList<>();
-                int count = 0;
-                for (AppInfo app : appInfos) {
-                    if (count <= 5) {
-                        Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(app.getPackageName());
-                        if (mainActivityIntent != null) {
-                            appsToShow.add(app);
-                            count++;
-                        }
-                    }
-                }
-                //save these 5 apps
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-                SharedPreferences.Editor editor = preferences.edit();
-                Set<String> selectedApps = new HashSet<>();
-                for (AppInfo appInfo : appsToShow) {
-                    selectedApps.add(appInfo.getPackageName());
-                }
-                editor.putStringSet("selectedApps", selectedApps);
-                editor.commit();
-                if (settings.showAppsInAscendingOrder) {
-                    QuickBarUtils.sortAppsByName(appsToShow);
-                }
-                showApps(innerLayout, settings, relativeLayout, appsToShow, iconSize, packageManager);
             }
-
+            //save these 5 apps
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+            SharedPreferences.Editor editor = preferences.edit();
+            Set<String> selectedApps = new HashSet<>();
+            for (AppInfo appInfo : appsToShow) {
+                selectedApps.add(appInfo.getPackageName()+":"+appInfo.getPosition());
+            }
+            editor.putStringSet("selectedApps", selectedApps);
+            editor.commit();
+            QuickBarUtils.sortAppsByPosition(appsToShow);
+            if (settings.showAppsInAscendingOrder) {
+                QuickBarUtils.sortAppsByName(appsToShow);
+            }
+            showApps(innerLayout, settings, relativeLayout, appsToShow, iconSize, packageManager);
         }
     }
 
@@ -327,7 +329,7 @@ public class QuickBarManager {
                         relativeLayout.setVisibility(View.GONE);
                         showIcon.setVisibility(View.VISIBLE);
                     }
-                    if(settings.vibrateAppIsLaunched){
+                    if (settings.vibrateAppIsLaunched) {
                         Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                         vibrator.vibrate(100);
                     }
@@ -355,7 +357,7 @@ public class QuickBarManager {
             for (ApplicationInfo applicationInfo : appList) {
                 String packageName = applicationInfo.packageName;
                 Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(packageName);
-                if(mainActivityIntent!=null){
+                if (mainActivityIntent != null) {
                     AppInfo appInfo = new AppInfo();
                     Drawable drawable = applicationInfo.loadIcon(packageManager);
                     //Convert image to bytes
@@ -409,7 +411,7 @@ public class QuickBarManager {
                 AppInfo appInfo = new AppInfo();
                 String packageName = packageInfo.packageName;
                 Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(packageName);
-                if(mainActivityIntent!=null){
+                if (mainActivityIntent != null) {
                     Drawable drawable = packageInfo.applicationInfo.loadIcon(packageManager);
                     byte[] bitmapData = getDrawableBytes(getBitMapFromDrawable(drawable));
 //                System.out.println("Package name is: "+packageName);
@@ -476,7 +478,7 @@ public class QuickBarManager {
         for (ResolveInfo resolveInfo : resolveInfos) {
             String packageName = resolveInfo.activityInfo.packageName;
             Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(packageName);
-            if(mainActivityIntent!=null){
+            if (mainActivityIntent != null) {
                 AppInfo appInfo = new AppInfo();
                 Drawable drawable = resolveInfo.loadIcon(packageManager);
                 byte[] bitmapData = getDrawableBytes(getBitMapFromDrawable(drawable));
@@ -495,7 +497,6 @@ public class QuickBarManager {
         }
         return dialerApps;
     }
-
 
 
     private static Bitmap getBitMapFromDrawable(Drawable drawable) {
