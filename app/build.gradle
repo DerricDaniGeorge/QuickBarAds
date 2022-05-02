@@ -6,7 +6,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.derric.quickbar"
+        applicationId "com.derric.quickbarads"
         minSdk 19
         targetSdk 31
         versionCode 1
@@ -42,4 +42,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    implementation files('libs/unity-ads.aar')
+
 }
