@@ -14,4 +14,6 @@
     <color name="light_red">#ff3333</color>
     <color name="grey_white">#f2f2f2</color>
     <color name="blueish_black">#282A35</color>
+    <color name="google_sheet_green">#34A853</color>
+    <color name="google_slides_yellow">#FBBC04</color>
 </resources>

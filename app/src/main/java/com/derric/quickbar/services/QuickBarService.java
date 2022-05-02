@@ -15,12 +15,12 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 
+import com.derric.quickbar.LoadingActivity;
 import com.derric.quickbar.MainActivity;
 import com.derric.quickbar.QuickBarManager;
 import com.derric.quickbar.R;
@@ -68,7 +68,7 @@ public class QuickBarService extends Service {
 
         mQuickBarManager = new QuickBarManager(this);
         ArrayList<AppInfo> appInfos = (ArrayList<AppInfo>) intent.getSerializableExtra("appInfos");
-        System.out.println("Appinfo size in service:" + appInfos.size());
+//        System.out.println("Appinfo size in service:" + appInfos.size());
         //Add the quickbar to screen
         mQuickBarManager.addToWindow(linearLayout, userSettings, appInfos);
         //Android OS Oreo or above requires Notificaition channel needs to be created to start
@@ -104,9 +104,9 @@ public class QuickBarService extends Service {
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID);
         //Show the notification as soon as the service starts
         builder.setWhen(System.currentTimeMillis());
-        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setSmallIcon(R.drawable.quickbar_logo1_rounded);
         builder.setContentTitle("QuickBar: Active");
-        builder.setContentText("QuickBar running.");
+        builder.setContentText("QuickBar is running");
         //OnGoing notification cannot be dismissed by user.
         builder.setOngoing(true);
         builder.setPriority(NotificationCompat.PRIORITY_MIN);
@@ -114,9 +114,9 @@ public class QuickBarService extends Service {
 
         //When user clicks the notification , open the app
         //Todo : Even if the app is opened, if we click the notification , it will again open the app. Need to fix it.
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(pendingIntent);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+//                new Intent(this, LoadingActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+//        builder.setContentIntent(pendingIntent);
         return builder.build();
     }
 
@@ -135,7 +135,7 @@ public class QuickBarService extends Service {
 
     public QuickBarManager.Settings loadUserSettings(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        System.out.println("settings are -->" + preferences.getAll());
+//        System.out.println("settings are --===================>" + preferences.getAll());
         final QuickBarManager.Settings settings = new QuickBarManager.Settings();
         settings.useTransparentBackground = preferences.getBoolean("transparentBar", false);
         settings.showAppsInAscendingOrder = preferences.getBoolean("sortApps", false);
@@ -150,13 +150,16 @@ public class QuickBarService extends Service {
         settings.hideIconTransparency = preferences.getInt("hideIconTransparency", 100);
         settings.showIconTransparency = preferences.getInt("showIconTransparency", 100);
         settings.appIconSize = preferences.getInt("appIconSize", 40);
-        settings.showIconSize = preferences.getInt("showIconSize", 10);
-        settings.hideIconSize = preferences.getInt("hideIconSize", 10);
+        settings.showIconSize = preferences.getInt("showIconSize", 20);
+        settings.hideIconSize = preferences.getInt("hideIconSize", 20);
         settings.hideQuickBarSeconds = preferences.getInt("hideQuickBarSeconds", 10);
         settings.showIconChooseSide = preferences.getString("showIconChooseSide", AppConstants.LEFT);
         settings.showIconChoosePosition = preferences.getString("showIconChoosePosition", AppConstants.CENTER);
         settings.hideIconChoosePosition = preferences.getString("hideIconChoosePosition", AppConstants.CENTER);
         settings.quickBarColor = preferences.getInt("quickBarColor", R.color.grey_white);
+        settings.vibrateAppIsLaunched = preferences.getBoolean("vibrateAppIsLaunched",true);
+        settings.vibrateShowIconPressed = preferences.getBoolean("vibrateShowIconPressed", false);
+        settings.vibrateHideIconPressed = preferences.getBoolean("vibrateHideIconPressed",false);
         return settings;
     }
 }

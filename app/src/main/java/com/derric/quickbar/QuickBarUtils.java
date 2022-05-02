@@ -5,6 +5,13 @@ import android.view.Gravity;
 import android.view.WindowManager;
 
 import com.derric.quickbar.constants.AppConstants;
+import com.derric.quickbar.models.AppInfo;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 public class QuickBarUtils {
 
@@ -45,5 +52,46 @@ public class QuickBarUtils {
     public static int dpToPx(int dp, Context context) {
         float density = context.getResources().getDisplayMetrics().density;
         return Math.round((float) dp * density);
+    }
+
+    public static ArrayList<AppInfo> getUserSelectedApps(Set<String> userSelectedApps, ArrayList<AppInfo> allApps) {
+        ArrayList<AppInfo> selectedApps = new ArrayList<>();
+        if (userSelectedApps != null) {
+            for (String packageName : userSelectedApps) {
+                String[] split = packageName.split(":");
+                for (AppInfo appInfo : allApps) {
+                    if (appInfo.getPackageName().equals(split[0])) {
+                        appInfo.setSelected(true);
+                        if (split.length > 1) {
+                            appInfo.setPosition(Integer.parseInt(split[1]));
+                        }
+                        selectedApps.add(appInfo);
+                    }
+                }
+            }
+        }
+//        System.out.println("User selected apps called.............");
+        sortAppsByPosition(selectedApps);
+        return selectedApps;
+    }
+
+    public static void sortAppsByName(List<AppInfo> appInfos) {
+        class AppNameAscendingComparator implements Comparator<AppInfo> {
+            @Override
+            public int compare(AppInfo o1, AppInfo o2) {
+                return o1.getAppName().compareTo(o2.getAppName());
+            }
+        }
+        Collections.sort(appInfos, new AppNameAscendingComparator());
+    }
+
+    public static void sortAppsByPosition(List<AppInfo> appInfos) {
+        class SortByPositionComparator implements Comparator<AppInfo> {
+            @Override
+            public int compare(AppInfo o1, AppInfo o2) {
+                return o1.getPosition() - o2.getPosition();
+            }
+        }
+        Collections.sort(appInfos, new SortByPositionComparator());
     }
 }

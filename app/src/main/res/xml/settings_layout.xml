@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <Preference
-        android:key="chooseApps"
-        android:title="Select Apps ..."
-        app:iconSpaceReserved="false">
-    </Preference>
     <com.derric.quickbar.uicomponents.ColorPalettePreference
         android:key="chooseTheme"
         android:title="Choose Theme ..."
         android:layout="@layout/color_palette"
         app:iconSpaceReserved="false">
     </com.derric.quickbar.uicomponents.ColorPalettePreference>
+    <Preference
+        android:key="chooseApps"
+        android:title="Select Apps ..."
+        app:iconSpaceReserved="false">
+    </Preference>
+    <Preference
+        android:key="orderApps"
+        android:title="Order Apps ..."
+        app:iconSpaceReserved="false">
+    </Preference>
     <PreferenceCategory>
     <SwitchPreferenceCompat
         android:key="transparentBar"
@@ -23,22 +28,22 @@
         android:singleLineTitle="false"
         android:title="Show apps in ascending order"
         app:iconSpaceReserved="false" />
-    <SwitchPreferenceCompat
-        android:key="autostart"
-        android:singleLineTitle="false"
-        android:title="Start QuickBar on device boot"
-        app:iconSpaceReserved="false" />
+<!--    <SwitchPreferenceCompat-->
+<!--        android:key="autostart"-->
+<!--        android:singleLineTitle="false"-->
+<!--        android:title="Start QuickBar on device boot"-->
+<!--        app:iconSpaceReserved="false" />-->
     <SwitchPreferenceCompat
         android:key="closeQuickBar"
         android:singleLineTitle="false"
         android:summary="Hide QuickBar when an app is launched from QuickBar"
         android:title="Hide QuickBar"
         app:iconSpaceReserved="false" />
-    <SwitchPreferenceCompat
-        android:key="hideLogo"
-        android:singleLineTitle="false"
-        android:title="Hide QuickBar logo"
-        app:iconSpaceReserved="false" />
+<!--    <SwitchPreferenceCompat-->
+<!--        android:key="hideLogo"-->
+<!--        android:singleLineTitle="false"-->
+<!--        android:title="Hide QuickBar logo"-->
+<!--        app:iconSpaceReserved="false" />-->
     </PreferenceCategory>
     <PreferenceCategory>
         <ListPreference
@@ -76,6 +81,25 @@
             android:key="hideIconChoosePosition"
             android:title="@string/settings_position_hide_icon"
             app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <CheckBoxPreference
+            android:key="vibrateHideIconPressed"
+            android:singleLineTitle="false"
+            android:title="Vibrate when hide icon pressed"
+            app:iconSpaceReserved="false" />
+        <CheckBoxPreference
+            android:key="vibrateShowIconPressed"
+            android:singleLineTitle="false"
+            android:title="Vibrate when show icon pressed"
+            app:iconSpaceReserved="false" />
+        <CheckBoxPreference
+            android:key="vibrateAppIsLaunched"
+            android:singleLineTitle="false"
+            android:title="Vibrate when app is launched"
+            android:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
     </PreferenceCategory>
     <PreferenceCategory>
     <SeekBarPreference

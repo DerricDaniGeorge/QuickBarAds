@@ -1,8 +1,6 @@
 package com.derric.quickbar.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,12 +19,12 @@ import com.derric.quickbar.models.AppInfo;
 import java.io.File;
 import java.util.List;
 
-public class AppDataAdapter extends RecyclerView.Adapter<AppDataAdapter.MyViewHolder> {
+public class ChooseAppsAdapter extends RecyclerView.Adapter<ChooseAppsAdapter.MyViewHolder> {
     private final List<AppInfo> appInfos;
     private final Context context;
     private boolean anyChange;
 
-    public AppDataAdapter(List<AppInfo> appInfos, Context context) {
+    public ChooseAppsAdapter(List<AppInfo> appInfos, Context context) {
         this.appInfos = appInfos;
         this.context = context;
     }

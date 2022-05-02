@@ -57,25 +57,7 @@ public class ChooseAppsActivity extends AppCompatActivity {
     //When the back button / back event occurred
     @Override
     public void onBackPressed() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = preferences.edit();
-//        StringBuilder builder = new StringBuilder();
-        selectedApps = new HashSet<>();
-        for (AppInfo appInfo : appInfos) {
-            if (appInfo.isSelected()) {
-//                builder.append(appInfo.getPackageName()).append(',');
-//                System.out.println("App: "+appInfo.getPackageName()+"
-//                saved to settings");
-                selectedApps.add(appInfo.getPackageName());
-            }
-        }
-        if (chooseAppsFragment.getAllAppsSelected()) {
-            editor.putBoolean("wasAllAppsSelected", true);
-        } else {
-            editor.putBoolean("wasAllAppsSelected", false);
-        }
-        editor.putStringSet("selectedApps", selectedApps);
-        editor.commit();
+        saveSelectedApps();
 
         if (chooseAppsFragment.getAdapter().isAnyChange()) {
 //            AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -101,6 +83,40 @@ public class ChooseAppsActivity extends AppCompatActivity {
         }
 //
         super.onBackPressed();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        saveSelectedApps();
+    }
+
+    private void saveSelectedApps() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+//        StringBuilder builder = new StringBuilder();
+        selectedApps = new HashSet<>();
+        for (AppInfo appInfo : appInfos) {
+            if (appInfo.isSelected()) {
+//                builder.append(appInfo.getPackageName()).append(',');
+//                System.out.println("App: "+appInfo.getPackageName()+"
+//                saved to settings");
+                selectedApps.add(appInfo.getPackageName());
+            }
+        }
+//        if (chooseAppsFragment.getAllAppsSelected()) {
+//            editor.putBoolean("wasAllAppsSelected", true);
+//        } else {
+//            editor.putBoolean("wasAllAppsSelected", false);
+//        }
+        editor.putStringSet("selectedApps", selectedApps);
+        editor.commit();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        saveSelectedApps();
     }
 
 }
