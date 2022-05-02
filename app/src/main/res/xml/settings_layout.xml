@@ -97,6 +97,7 @@
             android:key="vibrateAppIsLaunched"
             android:singleLineTitle="false"
             android:title="Vibrate when app is launched"
+            android:defaultValue="true"
             app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
