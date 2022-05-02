@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <com.derric.quickbar.uicomponents.ColorPalettePreference
+    <com.derric.quickbarads.uicomponents.ColorPalettePreference
         android:key="chooseTheme"
         android:title="Choose Theme ..."
         android:layout="@layout/color_palette"
         app:iconSpaceReserved="false">
-    </com.derric.quickbar.uicomponents.ColorPalettePreference>
+    </com.derric.quickbarads.uicomponents.ColorPalettePreference>
     <Preference
         android:key="chooseApps"
         android:title="Select Apps ..."
