@@ -10,4 +10,6 @@ public class AppConstants {
     public static final String GAME_ID = "4735993";
     public static final String BANNER_ID_TOP = "Banner_Android";
     public static final String BANNER_ID_BOTTOM = "BannerHomeBottom";
+    public static final String INTER_AD_SELECT_APPS = "Interstitial_Android";
+    public static final String INTER_AD_ORDER_APPS = "InterstitialOrderApps";
 }

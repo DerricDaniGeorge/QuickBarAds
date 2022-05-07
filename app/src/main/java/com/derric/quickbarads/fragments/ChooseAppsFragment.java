@@ -18,7 +18,9 @@ import android.view.ViewGroup;
 import com.derric.quickbarads.QuickBarUtils;
 import com.derric.quickbarads.R;
 import com.derric.quickbarads.adapters.ChooseAppsAdapter;
+import com.derric.quickbarads.constants.AppConstants;
 import com.derric.quickbarads.models.AppInfo;
+import com.unity3d.ads.UnityAds;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -65,6 +67,8 @@ public class ChooseAppsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         //Detect actionbar of the activity where this fragment is present
         setHasOptionsMenu(true);
+
+
     }
 
     @Override
