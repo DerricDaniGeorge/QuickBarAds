@@ -1,6 +1,7 @@
 package com.derric.quickbarads.constants;
 
 public class AppConstants {
+    private AppConstants(){}
     public static final String APP_INFOS = "appInfos";
     public static final String LEFT = "Left";
     public static final String RIGHT = "Right";
@@ -12,4 +13,5 @@ public class AppConstants {
     public static final String BANNER_ID_BOTTOM = "BannerHomeBottom";
     public static final String INTER_AD_SELECT_APPS = "Interstitial_Android";
     public static final String INTER_AD_ORDER_APPS = "InterstitialOrderApps";
+    public static final boolean TEST_ADS_MODE = false;
 }

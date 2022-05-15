@@ -3,17 +3,18 @@ package com.derric.quickbarads.fragments;
 import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -35,7 +36,7 @@ import java.util.ArrayList;
  * Use the {@link MainMenu#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainMenu extends Fragment{
+public class MainMenu extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -49,7 +50,6 @@ public class MainMenu extends Fragment{
     private String mParam2;
     private ArrayList<AppInfo> appInfos;
     private SettingsMenu settingsMenu;
-    private static boolean testMode = true;
     BannerView topBanner;
     BannerView bottomBanner;
 
@@ -83,11 +83,11 @@ public class MainMenu extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Initialize Unity ads
-        UnityAds.initialize(getContext(),AppConstants.GAME_ID,testMode);
-        topBanner = new BannerView(getActivity(),AppConstants.BANNER_ID_TOP, new UnityBannerSize(320,50));
-        bottomBanner = new BannerView(getActivity(),AppConstants.BANNER_ID_BOTTOM, new UnityBannerSize(320,50));
+        UnityAds.initialize(getContext(), AppConstants.GAME_ID, AppConstants.TEST_ADS_MODE);
+        topBanner = new BannerView(getActivity(), AppConstants.BANNER_ID_TOP, new UnityBannerSize(320, 50));
+        bottomBanner = new BannerView(getActivity(), AppConstants.BANNER_ID_BOTTOM, new UnityBannerSize(320, 50));
         if (getArguments() != null) {
-            appInfos = (ArrayList<AppInfo>)  getArguments().getSerializable(AppConstants.APP_INFOS);
+            appInfos = (ArrayList<AppInfo>) getArguments().getSerializable(AppConstants.APP_INFOS);
         }
     }
 
@@ -98,10 +98,16 @@ public class MainMenu extends Fragment{
         View menuView = inflater.inflate(R.layout.fragment_main_menu, container, false);
         LinearLayout topBannerLayout = menuView.findViewById(R.id.topBannerAd);
         topBanner.load();
+        if (topBanner.getParent() != null) {
+            ((ViewGroup) topBanner.getParent()).removeView(topBanner);
+        }
         topBannerLayout.addView(topBanner);
 
         LinearLayout bottomBannerLayout = menuView.findViewById(R.id.bottomBannerAd);
         bottomBanner.load();
+        if (bottomBanner.getParent() != null) {
+            ((ViewGroup) bottomBanner.getParent()).removeView(bottomBanner);
+        }
         bottomBannerLayout.addView(bottomBanner);
         //On clicking "Launch QuickBar" button
         menuView.findViewById(R.id.launch_quickbar_button).setOnClickListener((v -> {
@@ -143,9 +149,27 @@ public class MainMenu extends Fragment{
         }
         //if none of the above if conditions satisfies means, we have to ask the user for overlay permission
         if (askForOverlayPermission) {
-            Intent askIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.getPackageName()));
-            //We must add "SYSTEM_ALERT_WINDOW" in android manifest file...otherwise it won't work
-            startActivityForResult(askIntent, OVERLAY_PERMISSION_REQUEST_CODE);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Allow permission");
+            builder.setMessage("Inorder to let Quickbar accessible from all screens, please allow 'Appear on top' or 'Draw over other apps' permission in settings for Quickbar. This is an one time process");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    Intent askIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.getPackageName()));
+                    //We must add "SYSTEM_ALERT_WINDOW" in android manifest file...otherwise it won't work
+                    startActivityForResult(askIntent, OVERLAY_PERMISSION_REQUEST_CODE);
+                }
+            });
+            builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog askPermissionDialog =  builder.create();
+            askPermissionDialog.show();
+
         }
 
     }
@@ -161,7 +185,7 @@ public class MainMenu extends Fragment{
         Class<? extends Service> service = QuickBarService.class;
         Intent startIntent = new Intent(activity, service);
         //Add the apps info data, so that it can retrieved at other end
-        startIntent.putExtra(AppConstants.APP_INFOS,appInfos);
+        startIntent.putExtra(AppConstants.APP_INFOS, appInfos);
         ContextCompat.startForegroundService(activity, startIntent);
     }
 

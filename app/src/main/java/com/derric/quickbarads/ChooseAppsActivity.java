@@ -29,7 +29,6 @@ public class ChooseAppsActivity extends AppCompatActivity implements IUnityAdsIn
     private ArrayList<AppInfo> appInfos;
     private Set<String> selectedApps;
     private ChooseAppsFragment chooseAppsFragment;
-    private boolean testMode = true;
     private boolean isAdReady = false;
 
     @Override
@@ -37,7 +36,7 @@ public class ChooseAppsActivity extends AppCompatActivity implements IUnityAdsIn
         super.onCreate(savedInstanceState);
         //Set main activity layout
         setContentView(R.layout.activity_main);
-        UnityAds.initialize(getApplicationContext(), AppConstants.GAME_ID, testMode);
+//        UnityAds.initialize(getApplicationContext(), AppConstants.GAME_ID, AppConstants.TEST_ADS_MODE);
         appInfos = (ArrayList<AppInfo>) getIntent().getSerializableExtra(AppConstants.APP_INFOS);
         //To set a fragment to an activity, we have to first create a fragment transaction
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -59,6 +58,8 @@ public class ChooseAppsActivity extends AppCompatActivity implements IUnityAdsIn
     //When the back button / back event occurred
     @Override
     public void onBackPressed() {
+//        Log.d("back","backPreesed");
+        super.onBackPressed();
         saveSelectedApps();
 
         if (chooseAppsFragment.getAdapter().isAnyChange()) {
@@ -87,16 +88,19 @@ public class ChooseAppsActivity extends AppCompatActivity implements IUnityAdsIn
 //        if(isAdReady){
             UnityAds.show(this,AppConstants.INTER_AD_SELECT_APPS,new UnityAdsShowOptions(),showListener);
 //        }
-        super.onBackPressed();
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+//        Log.d("destroy","onDestyroy");
+
         saveSelectedApps();
     }
 
     private void saveSelectedApps() {
+//        Log.d("save","Inside saveselectedApps");
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
 //        StringBuilder builder = new StringBuilder();
@@ -104,8 +108,7 @@ public class ChooseAppsActivity extends AppCompatActivity implements IUnityAdsIn
         for (AppInfo appInfo : appInfos) {
             if (appInfo.isSelected()) {
 //                builder.append(appInfo.getPackageName()).append(',');
-//                System.out.println("App: "+appInfo.getPackageName()+"
-//                saved to settings");
+//                System.out.println("App: "+appInfo.getPackageName()+" saved to settings");
                 selectedApps.add(appInfo.getPackageName());
             }
         }
@@ -122,6 +125,8 @@ public class ChooseAppsActivity extends AppCompatActivity implements IUnityAdsIn
     public void onPause(){
         super.onPause();
         saveSelectedApps();
+//        Log.d("pause","onPuase");
+
     }
 
 
@@ -140,7 +145,7 @@ public class ChooseAppsActivity extends AppCompatActivity implements IUnityAdsIn
         @Override
         public void onUnityAdsAdLoaded(String s) {
             isAdReady = true;
-            Log.i("Unityads","Ad loadded");
+//            Log.i("Unityads","Ad loadded");
         }
 
         @Override
@@ -166,7 +171,7 @@ public class ChooseAppsActivity extends AppCompatActivity implements IUnityAdsIn
 
         @Override
         public void onUnityAdsShowComplete(String s, UnityAds.UnityAdsShowCompletionState unityAdsShowCompletionState) {
-
+            UnityAds.load(AppConstants.INTER_AD_SELECT_APPS,loadListener);
         }
     };
 }
