@@ -6,6 +6,7 @@ import androidx.preference.PreferenceManager;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.Toast;
@@ -13,22 +14,29 @@ import android.widget.Toast;
 import com.derric.quickbarads.constants.AppConstants;
 import com.derric.quickbarads.fragments.ChooseAppsFragment;
 import com.derric.quickbarads.models.AppInfo;
+import com.unity3d.ads.IUnityAdsInitializationListener;
+import com.unity3d.ads.IUnityAdsLoadListener;
+import com.unity3d.ads.IUnityAdsShowListener;
+import com.unity3d.ads.UnityAds;
+import com.unity3d.ads.UnityAdsShowOptions;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ChooseAppsActivity extends AppCompatActivity {
+public class ChooseAppsActivity extends AppCompatActivity implements IUnityAdsInitializationListener {
 
     private ArrayList<AppInfo> appInfos;
     private Set<String> selectedApps;
     private ChooseAppsFragment chooseAppsFragment;
+    private boolean isAdReady = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Set main activity layout
         setContentView(R.layout.activity_main);
+//        UnityAds.initialize(getApplicationContext(), AppConstants.GAME_ID, AppConstants.TEST_ADS_MODE);
         appInfos = (ArrayList<AppInfo>) getIntent().getSerializableExtra(AppConstants.APP_INFOS);
         //To set a fragment to an activity, we have to first create a fragment transaction
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -50,6 +58,8 @@ public class ChooseAppsActivity extends AppCompatActivity {
     //When the back button / back event occurred
     @Override
     public void onBackPressed() {
+//        Log.d("back","backPreesed");
+        super.onBackPressed();
         saveSelectedApps();
 
         if (chooseAppsFragment.getAdapter().isAnyChange()) {
@@ -75,16 +85,22 @@ public class ChooseAppsActivity extends AppCompatActivity {
             Toast.makeText(this,"Please stop and re-launch quickbar if there is any changes in settings",Toast.LENGTH_SHORT).show();
         }
 //
-        super.onBackPressed();
+//        if(isAdReady){
+            UnityAds.show(this,AppConstants.INTER_AD_SELECT_APPS,new UnityAdsShowOptions(),showListener);
+//        }
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+//        Log.d("destroy","onDestyroy");
+
         saveSelectedApps();
     }
 
     private void saveSelectedApps() {
+//        Log.d("save","Inside saveselectedApps");
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
 //        StringBuilder builder = new StringBuilder();
@@ -92,8 +108,7 @@ public class ChooseAppsActivity extends AppCompatActivity {
         for (AppInfo appInfo : appInfos) {
             if (appInfo.isSelected()) {
 //                builder.append(appInfo.getPackageName()).append(',');
-//                System.out.println("App: "+appInfo.getPackageName()+"
-//                saved to settings");
+//                System.out.println("App: "+appInfo.getPackageName()+" saved to settings");
                 selectedApps.add(appInfo.getPackageName());
             }
         }
@@ -110,6 +125,53 @@ public class ChooseAppsActivity extends AppCompatActivity {
     public void onPause(){
         super.onPause();
         saveSelectedApps();
+//        Log.d("pause","onPuase");
+
     }
 
+
+    @Override
+    public void onInitializationComplete() {
+        UnityAds.load(AppConstants.INTER_AD_SELECT_APPS,loadListener);
+    }
+
+    @Override
+    public void onInitializationFailed(UnityAds.UnityAdsInitializationError unityAdsInitializationError, String s) {
+
+    }
+
+
+    IUnityAdsLoadListener loadListener = new IUnityAdsLoadListener() {
+        @Override
+        public void onUnityAdsAdLoaded(String s) {
+            isAdReady = true;
+//            Log.i("Unityads","Ad loadded");
+        }
+
+        @Override
+        public void onUnityAdsFailedToLoad(String s, UnityAds.UnityAdsLoadError unityAdsLoadError, String s1) {
+
+        }
+    };
+    IUnityAdsShowListener showListener = new IUnityAdsShowListener() {
+        @Override
+        public void onUnityAdsShowFailure(String s, UnityAds.UnityAdsShowError unityAdsShowError, String s1) {
+
+        }
+
+        @Override
+        public void onUnityAdsShowStart(String s) {
+            isAdReady = false;
+        }
+
+        @Override
+        public void onUnityAdsShowClick(String s) {
+
+        }
+
+        @Override
+        public void onUnityAdsShowComplete(String s, UnityAds.UnityAdsShowCompletionState unityAdsShowCompletionState) {
+            UnityAds.load(AppConstants.INTER_AD_SELECT_APPS,loadListener);
+        }
+    };
 }
