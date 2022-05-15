@@ -68,14 +68,14 @@ public class OrderAppsActivity extends AppCompatActivity implements IUnityAdsIni
 
     @Override
     public void onDestroy() {
-        saveAppsOrder();
         super.onDestroy();
+        saveAppsOrder();
     }
 
     @Override
     public void onPause() {
-        saveAppsOrder();
         super.onPause();
+        saveAppsOrder();
     }
 
     @Override
@@ -93,7 +93,7 @@ public class OrderAppsActivity extends AppCompatActivity implements IUnityAdsIni
         @Override
         public void onUnityAdsAdLoaded(String s) {
             isAdReady = true;
-            Log.i("Unityads", "Ad loadded");
+//            Log.i("Unityads", "Ad loadded");
         }
 
         @Override
@@ -119,7 +119,7 @@ public class OrderAppsActivity extends AppCompatActivity implements IUnityAdsIni
 
         @Override
         public void onUnityAdsShowComplete(String s, UnityAds.UnityAdsShowCompletionState unityAdsShowCompletionState) {
-
+            UnityAds.load(AppConstants.INTER_AD_ORDER_APPS, loadListener);
         }
     };
 }

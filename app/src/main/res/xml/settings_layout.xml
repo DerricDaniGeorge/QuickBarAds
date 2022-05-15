@@ -38,6 +38,7 @@
         android:singleLineTitle="false"
         android:summary="Hide QuickBar when an app is launched from QuickBar"
         android:title="Hide QuickBar"
+        android:defaultValue="true"
         app:iconSpaceReserved="false" />
 <!--    <SwitchPreferenceCompat-->
 <!--        android:key="hideLogo"-->

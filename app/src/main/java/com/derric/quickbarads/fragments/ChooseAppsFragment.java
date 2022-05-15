@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.derric.quickbarads.models.AppInfo;
 import com.unity3d.ads.UnityAds;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -67,8 +69,6 @@ public class ChooseAppsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         //Detect actionbar of the activity where this fragment is present
         setHasOptionsMenu(true);
-
-
     }
 
     @Override
@@ -80,9 +80,9 @@ public class ChooseAppsFragment extends Fragment {
 //        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 2);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         recyclerView.setLayoutManager(layoutManager);
-        DividerItemDecoration divider =  new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL);
+        DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(divider);
-        PackageManager packageManager = getContext().getPackageManager();
+//        PackageManager packageManager = getContext().getPackageManager();
 //        List<AppInfo> appInfos = QuickBarManager.getAllInstalledApps(packageManager,getContext());
 //        List<AppInfo> appsWithActivity = new ArrayList<>();
 //        for (AppInfo appInfo : appInfos) {
@@ -94,15 +94,20 @@ public class ChooseAppsFragment extends Fragment {
         //If user selected apps are there, then when showing the list, mark those selected apps checked
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         Set<String> selectedApps = preferences.getStringSet("selectedApps", null);
+        List<String> appNames = new ArrayList<>();
+        if (selectedApps != null) {
+            for (String app : selectedApps) {
+                String[] split = app.split(":");
+                appNames.add(split[0]);
+            }
+        }
         if (selectedApps != null) {
             for (AppInfo appInfo : appInfos) {
                 String[] split = appInfo.getPackageName().split(":");
-                if (selectedApps.contains(split[0])) {
+                if (appNames.contains(split[0])) {
                     appInfo.setSelected(true);
                 }
             }
-        }else{
-//            System.out.println("SelectedApps is nulllllllllllllllllll");
         }
         adapter = new ChooseAppsAdapter(appInfos, getContext());
         recyclerView.setAdapter(adapter);
