@@ -57,6 +57,7 @@ public class ChooseAppsActivity extends AppCompatActivity {
     //When the back button / back event occurred
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         saveSelectedApps();
 
         if (chooseAppsFragment.getAdapter().isAnyChange()) {
@@ -82,7 +83,7 @@ public class ChooseAppsActivity extends AppCompatActivity {
             Toast.makeText(this,"Please stop and re-launch quickbar if there is any changes in settings",Toast.LENGTH_SHORT).show();
         }
 //
-        super.onBackPressed();
+
     }
 
     @Override

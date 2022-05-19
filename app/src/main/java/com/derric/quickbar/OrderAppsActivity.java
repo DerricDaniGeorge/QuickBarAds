@@ -60,13 +60,13 @@ public class OrderAppsActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy(){
-        saveAppsOrder();
         super.onDestroy();
+        saveAppsOrder();
     }
 
     @Override
     public void onPause(){
-        saveAppsOrder();
         super.onPause();
+        saveAppsOrder();
     }
 }
