@@ -81,8 +81,8 @@ public class SettingsMenu extends PreferenceFragmentCompat {
                 Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(app.getPackageName());
                 if (mainActivityIntent != null) {
                     appsToShow.add(app);
-                    app.setSelected(true);
-                    app.setPosition(count);
+//                    app.setSelected(true);
+//                    app.setPosition(count);
                     count++;
                 }
             }
@@ -91,8 +91,9 @@ public class SettingsMenu extends PreferenceFragmentCompat {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = preferences.edit();
         Set<String> selectedApps = new HashSet<>();
+        int position = 0;
         for (AppInfo appInfo : appsToShow) {
-            selectedApps.add(appInfo.getPackageName()+":"+appInfo.getPosition());
+            selectedApps.add(appInfo.getPackageName() + ":" + position++);
         }
         editor.putStringSet("selectedApps", selectedApps);
         editor.commit();

@@ -56,10 +56,10 @@ public class OrderAppsActivity extends AppCompatActivity implements IUnityAdsIni
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
         Set<String> selectedApps = new HashSet<>();
-        int count = 1;
+        int count = 0;
         for (AppInfo appInfo : userSelectedApps) {
-            appInfo.setPosition(count++);
-            selectedApps.add(appInfo.getPackageName() + ":" + count);
+//            appInfo.setPosition(count++);
+            selectedApps.add(appInfo.getPackageName()+":"+count++);
 //            System.out.println("Saving app____________: "+appInfo.getAppName()+" count::::"+count);
         }
         editor.putStringSet("selectedApps", selectedApps);
