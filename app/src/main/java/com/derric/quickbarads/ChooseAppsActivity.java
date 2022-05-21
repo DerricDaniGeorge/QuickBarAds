@@ -38,6 +38,12 @@ public class ChooseAppsActivity extends AppCompatActivity implements IUnityAdsIn
         setContentView(R.layout.activity_main);
 //        UnityAds.initialize(getApplicationContext(), AppConstants.GAME_ID, AppConstants.TEST_ADS_MODE);
         appInfos = (ArrayList<AppInfo>) getIntent().getSerializableExtra(AppConstants.APP_INFOS);
+        for(AppInfo appInfo:appInfos){
+            if(appInfo.isSelected()){
+                appInfo.setSelected(false);
+//                System.out.println(appInfo.getPackageName()+ " is arelready selec=====ted====== unseleing it");
+            }
+        }
         //To set a fragment to an activity, we have to first create a fragment transaction
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         //Create the fragment object
