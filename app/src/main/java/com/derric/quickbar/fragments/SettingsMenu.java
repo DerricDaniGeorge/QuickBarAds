@@ -60,7 +60,8 @@ public class SettingsMenu extends PreferenceFragmentCompat {
                 Intent orderAppsIntent = new Intent(getActivity(), OrderAppsActivity.class);
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
                 //Show only user selected Apps here
-                ArrayList<AppInfo> userSelectedApps = QuickBarUtils.getUserSelectedApps(preferences.getStringSet("selectedApps", null), appInfos);                if(userSelectedApps == null || userSelectedApps.isEmpty()){
+                ArrayList<AppInfo> userSelectedApps = QuickBarUtils.getUserSelectedApps(preferences.getStringSet("selectedApps", null), appInfos);
+                if (userSelectedApps == null || userSelectedApps.isEmpty()) {
                     userSelectedApps = chooseRandomAppsAndSave();
                 }
                 orderAppsIntent.putExtra(AppConstants.APP_INFOS, userSelectedApps);
@@ -73,7 +74,8 @@ public class SettingsMenu extends PreferenceFragmentCompat {
 //        barTransparencySeekBar
 
     }
-    private ArrayList<AppInfo> chooseRandomAppsAndSave(){
+
+    private ArrayList<AppInfo> chooseRandomAppsAndSave() {
         //There are no user selected apps, means user is using the app for first time
         //show some random 5 apps
         ArrayList<AppInfo> appsToShow = new ArrayList<>();
@@ -84,8 +86,8 @@ public class SettingsMenu extends PreferenceFragmentCompat {
                 Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(app.getPackageName());
                 if (mainActivityIntent != null) {
                     appsToShow.add(app);
-                    app.setSelected(true);
-                    app.setPosition(count);
+//                    app.setSelected(true);
+//                    app.setPosition(count);
                     count++;
                 }
             }
@@ -94,8 +96,9 @@ public class SettingsMenu extends PreferenceFragmentCompat {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = preferences.edit();
         Set<String> selectedApps = new HashSet<>();
+        int position = 0;
         for (AppInfo appInfo : appsToShow) {
-            selectedApps.add(appInfo.getPackageName()+":"+appInfo.getPosition());
+            selectedApps.add(appInfo.getPackageName() + ":" + position++);
         }
         editor.putStringSet("selectedApps", selectedApps);
         editor.commit();

@@ -48,13 +48,15 @@ public class OrderAppsActivity extends AppCompatActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
         Set<String> selectedApps = new HashSet<>();
-        int count = 1;
+        int count = 0;
         for (AppInfo appInfo : userSelectedApps) {
-            appInfo.setPosition(count++);
-            selectedApps.add(appInfo.getPackageName()+":"+count);
+//            System.out.println("__)))) count is: "+count);
+//            appInfo.setPosition(count++);
+            selectedApps.add(appInfo.getPackageName()+":"+count++);
 //            System.out.println("Saving app____________: "+appInfo.getAppName()+" count::::"+count);
         }
         editor.putStringSet("selectedApps", selectedApps);
+//        System.out.println("===================== Order apps---Insdie saveApps: "+selectedApps);
         editor.commit();
     }
 
