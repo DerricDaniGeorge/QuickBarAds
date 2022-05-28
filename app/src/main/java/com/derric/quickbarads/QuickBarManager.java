@@ -186,6 +186,7 @@ public class QuickBarManager {
         int showIconPixels = QuickBarUtils.dpToPx(settings.showIconSize, mContext);
         params.width = showIconPixels;
         params.height = showIconPixels;
+//        params.verticalMargin = 20;
         params.type = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 ?
                 WindowManager.LayoutParams.TYPE_PRIORITY_PHONE : WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |

@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+import androidx.preference.SeekBarPreference;
 
 import com.derric.quickbarads.ChooseAppsActivity;
 import com.derric.quickbarads.OrderAppsActivity;
@@ -69,6 +70,9 @@ public class SettingsMenu extends PreferenceFragmentCompat {
 
 //        SeekBarPreference barTransparencySeekBar = (SeekBarPreference) findPreference("quickbarTransparency");
 //        barTransparencySeekBar
+
+//        hideQuickBarSeconds
+        SeekBarPreference hideQuickBarSlider = (SeekBarPreference) findPreference("hideQuickBarSeconds");
 
     }
 

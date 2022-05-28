@@ -9,6 +9,6 @@
         android:layout_height="match_parent"
         android:contentDescription="show icon"
         android:rotation="270"
-        android:src="@drawable/baseline_android_24" />
+        android:src="@drawable/ic_android_black_24dp" />
 </LinearLayout>
 
