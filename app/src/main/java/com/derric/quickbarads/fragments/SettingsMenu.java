@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -36,6 +37,7 @@ public class SettingsMenu extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_layout, rootKey);
+        Toast.makeText(getContext(),"Scroll down for more settings....", Toast.LENGTH_SHORT).show();
 //        getPreferenceScreen().getExtras().putSerializable(AppConstants.APP_INFOS, appInfos);
         Preference chooseApp = findPreference("chooseApps");
         chooseApp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
