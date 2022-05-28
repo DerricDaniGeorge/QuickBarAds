@@ -7,6 +7,12 @@
         android:layout="@layout/color_palette"
         app:iconSpaceReserved="false">
     </com.derric.quickbar.uicomponents.ColorPalettePreference>
+    <com.derric.quickbar.uicomponents.IconChoosePreference
+        android:key="chooseIcon"
+        android:title="Choose Icon ..."
+        android:layout="@layout/icon_chooser_layout"
+        app:iconSpaceReserved="false">
+    </com.derric.quickbar.uicomponents.IconChoosePreference>
     <Preference
         android:key="chooseApps"
         android:title="Select Apps ..."
@@ -105,35 +111,35 @@
     <PreferenceCategory>
     <SeekBarPreference
         android:key="quickbarTransparency"
-        android:title="Adjust QuickBar opacity"
+        android:title="QuickBar opacity"
         app:defaultValue="100"
         app:iconSpaceReserved="false"
         app:min="5" />
     <SeekBarPreference
         android:key="hideIconTransparency"
-        android:title="Adjust Hide icon opacity"
+        android:title="Hide icon opacity"
         app:defaultValue="100"
         app:iconSpaceReserved="false" />
     <SeekBarPreference
         android:key="showIconTransparency"
-        android:title="Adjust show icon opacity"
+        android:title="Show icon opacity"
         app:defaultValue="100"
         app:iconSpaceReserved="false" />
     <SeekBarPreference
         android:key="appIconSize"
-        android:title="Adjust app icon size"
+        android:title="App icon size"
         app:defaultValue="40"
         app:iconSpaceReserved="false"
         app:min="5" />
     <SeekBarPreference
         android:key="showIconSize"
-        android:title="Adjust show icon size"
+        android:title="Show icon size"
         app:defaultValue="22"
         app:iconSpaceReserved="false"
         app:min="5" />
     <SeekBarPreference
         android:key="hideIconSize"
-        android:title="Adjust hide icon size"
+        android:title="Hide icon size"
         app:defaultValue="22"
         app:iconSpaceReserved="false"
         app:min="5" />
