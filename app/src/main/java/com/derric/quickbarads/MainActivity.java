@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 //        setTheme(R.style.Base_Theme_AppCompat);
         //When the app is started, fetch the app details behind the scene.
         //As it has nothing to do with view, we can use java thread executor

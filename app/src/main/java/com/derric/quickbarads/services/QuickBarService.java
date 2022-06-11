@@ -149,7 +149,7 @@ public class QuickBarService extends Service {
         settings.appIconSize = preferences.getInt("appIconSize", 35);
         settings.showIconSize = preferences.getInt("showIconSize", 22);
         settings.hideIconSize = preferences.getInt("hideIconSize", 22);
-        settings.hideQuickBarSeconds = preferences.getInt("hideQuickBarSeconds", 10);
+        settings.hideQuickBarSeconds = preferences.getInt("hideQuickBarSeconds", 5);
         settings.showIconChooseSide = preferences.getString("showIconChooseSide", AppConstants.LEFT);
         settings.showIconChoosePosition = preferences.getString("showIconChoosePosition", AppConstants.CENTER);
         settings.hideIconChoosePosition = preferences.getString("hideIconChoosePosition", AppConstants.CENTER);

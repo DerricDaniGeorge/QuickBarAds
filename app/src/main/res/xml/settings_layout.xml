@@ -152,7 +152,7 @@
     <SeekBarPreference
         android:key="hideQuickBarSeconds"
         android:title="Hide QuickBar after: (in seconds)"
-        app:defaultValue="10"
+        app:defaultValue="5"
         app:iconSpaceReserved="false"
         app:updatesContinuously="true"
         app:showSeekBarValue="true"
