@@ -15,3 +15,4 @@ public class AppConstants {
     public static final String INTER_AD_ORDER_APPS = "InterstitialOrderApps";
     public static final boolean TEST_ADS_MODE = false;
 }
+

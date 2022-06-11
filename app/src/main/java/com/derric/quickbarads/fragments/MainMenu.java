@@ -151,7 +151,7 @@ public class MainMenu extends Fragment {
         if (askForOverlayPermission) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Allow permission");
-            builder.setMessage("Inorder to let Quickbar accessible from all screens, please allow 'Appear on top' or 'Draw over other apps' permission in settings for Quickbar. This is an one time process");
+            builder.setMessage("Inorder to let Quickbar accessible from all screens, please allow 'Appear on top' or 'Draw over other apps' permission in device settings against Quickbar and come back to app. This is an one time process");
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

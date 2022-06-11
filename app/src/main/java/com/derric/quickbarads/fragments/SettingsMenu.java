@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+import androidx.preference.SeekBarPreference;
 
 import com.derric.quickbarads.ChooseAppsActivity;
 import com.derric.quickbarads.OrderAppsActivity;
@@ -36,6 +38,7 @@ public class SettingsMenu extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_layout, rootKey);
+        Toast.makeText(getContext(),"Scroll down for more settings....", Toast.LENGTH_SHORT).show();
 //        getPreferenceScreen().getExtras().putSerializable(AppConstants.APP_INFOS, appInfos);
         Preference chooseApp = findPreference("chooseApps");
         chooseApp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -68,6 +71,9 @@ public class SettingsMenu extends PreferenceFragmentCompat {
 //        SeekBarPreference barTransparencySeekBar = (SeekBarPreference) findPreference("quickbarTransparency");
 //        barTransparencySeekBar
 
+//        hideQuickBarSeconds
+        SeekBarPreference hideQuickBarSlider = (SeekBarPreference) findPreference("hideQuickBarSeconds");
+
     }
 
     private ArrayList<AppInfo> chooseRandomAppsAndSave(){
@@ -81,8 +87,8 @@ public class SettingsMenu extends PreferenceFragmentCompat {
                 Intent mainActivityIntent = packageManager.getLaunchIntentForPackage(app.getPackageName());
                 if (mainActivityIntent != null) {
                     appsToShow.add(app);
-                    app.setSelected(true);
-                    app.setPosition(count);
+//                    app.setSelected(true);
+//                    app.setPosition(count);
                     count++;
                 }
             }
@@ -91,8 +97,9 @@ public class SettingsMenu extends PreferenceFragmentCompat {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = preferences.edit();
         Set<String> selectedApps = new HashSet<>();
+        int position = 0;
         for (AppInfo appInfo : appsToShow) {
-            selectedApps.add(appInfo.getPackageName()+":"+appInfo.getPosition());
+            selectedApps.add(appInfo.getPackageName() + ":" + position++);
         }
         editor.putStringSet("selectedApps", selectedApps);
         editor.commit();
