@@ -42,6 +42,8 @@ public class OrderAppsFragment extends Fragment implements DragListener {
     public OrderAppsFragment(ArrayList<AppInfo> userSelectedApps) {
         this.userSelectedApps = userSelectedApps;
     }
+    //A public no argument constructor is must for all subclasses of Fragment
+    public OrderAppsFragment(){}
 
 
 

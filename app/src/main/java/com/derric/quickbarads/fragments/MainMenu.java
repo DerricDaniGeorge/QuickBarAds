@@ -53,6 +53,7 @@ public class MainMenu extends Fragment {
     BannerView topBanner;
     BannerView bottomBanner;
 
+    //A public no arugment constructor is must for all subclasses of Fragment
     public MainMenu() {
         // Required empty public constructor
     }
