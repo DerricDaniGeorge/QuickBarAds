@@ -3,6 +3,7 @@ package com.derric.quickbarads.services;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,8 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 
+import com.derric.quickbarads.LoadingActivity;
+import com.derric.quickbarads.MainActivity;
 import com.derric.quickbarads.QuickBarManager;
 import com.derric.quickbarads.R;
 import com.derric.quickbarads.constants.AppConstants;
@@ -103,7 +106,7 @@ public class QuickBarService extends Service {
         builder.setWhen(System.currentTimeMillis());
         builder.setSmallIcon(R.drawable.quickbar_logo1_rounded);
         builder.setContentTitle("QuickBar: Active");
-        builder.setContentText("QuickBar is running");
+        builder.setContentText("Tap here to open QuickBar settings");
         //OnGoing notification cannot be dismissed by user.
         builder.setOngoing(true);
         builder.setPriority(NotificationCompat.PRIORITY_MIN);
@@ -111,9 +114,9 @@ public class QuickBarService extends Service {
 
         //When user clicks the notification , open the app
         //Todo : Even if the app is opened, if we click the notification , it will again open the app. Need to fix it.
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-//                new Intent(this, LoadingActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-//        builder.setContentIntent(pendingIntent);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
         return builder.build();
     }
 

@@ -9,8 +9,8 @@ android {
         applicationId "com.derric.quickbarads"
         minSdk 19
         targetSdk 31
-        versionCode 8
-        versionName "Release 1.8"
+        versionCode 9
+        versionName "Release 1.9"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
