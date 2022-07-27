@@ -115,7 +115,7 @@ public class QuickBarService extends Service {
         //When user clicks the notification , open the app
         //Todo : Even if the app is opened, if we click the notification , it will again open the app. Need to fix it.
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+                new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         builder.setContentIntent(pendingIntent);
         return builder.build();
     }
@@ -157,9 +157,9 @@ public class QuickBarService extends Service {
         settings.showIconChoosePosition = preferences.getString("showIconChoosePosition", AppConstants.CENTER);
         settings.hideIconChoosePosition = preferences.getString("hideIconChoosePosition", AppConstants.CENTER);
         settings.quickBarColor = preferences.getInt("quickBarColor", R.color.google_sheet_green);
-        settings.vibrateAppIsLaunched = preferences.getBoolean("vibrateAppIsLaunched",true);
+        settings.vibrateAppIsLaunched = preferences.getBoolean("vibrateAppIsLaunched", true);
         settings.vibrateShowIconPressed = preferences.getBoolean("vibrateShowIconPressed", false);
-        settings.vibrateHideIconPressed = preferences.getBoolean("vibrateHideIconPressed",false);
+        settings.vibrateHideIconPressed = preferences.getBoolean("vibrateHideIconPressed", false);
         return settings;
     }
 }
