@@ -3,14 +3,14 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.derric.quickbarads"
         minSdk 19
-        targetSdk 33
-        versionCode 10
-        versionName "Release 1.11"
+        targetSdk 34
+        versionCode 12
+        versionName "Release 1.12"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
