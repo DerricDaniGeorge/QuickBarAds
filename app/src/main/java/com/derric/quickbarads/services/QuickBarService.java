@@ -8,6 +8,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ServiceInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
@@ -20,7 +21,6 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 
-import com.derric.quickbarads.LoadingActivity;
 import com.derric.quickbarads.MainActivity;
 import com.derric.quickbarads.QuickBarManager;
 import com.derric.quickbarads.R;
@@ -76,9 +76,17 @@ public class QuickBarService extends Service {
 
         //Start the foreground service
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(NOTIFICATION_ID, showNotification(this, getNotificationChannel()));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(NOTIFICATION_ID, showNotification(this, getNotificationChannel()), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
+            } else {
+                startForeground(NOTIFICATION_ID, showNotification(this, getNotificationChannel()));
+            }
         } else {
-            startForeground(NOTIFICATION_ID, showNotification(this, NOTIFICATION_CHANNEL_ID));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(NOTIFICATION_ID, showNotification(this, NOTIFICATION_CHANNEL_ID), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
+            } else {
+                startForeground(NOTIFICATION_ID, showNotification(this, NOTIFICATION_CHANNEL_ID));
+            }
         }
         return START_REDELIVER_INTENT;
     }
